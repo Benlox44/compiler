@@ -11,7 +11,7 @@ reserved = {
 tokens = [
     'NUMBER', 'ID', 'EQUALS', 'PLUS', 'MINUS', 'TIMES', 'DIVIDE',
     'LPAREN', 'RPAREN', 'STRING', 'CHAR', 'SEMICOLON', 'LESS', 'GREATER',
-    'LBRACE', 'RBRACE'
+    'LBRACE', 'RBRACE', 'AND', 'OR', 'NOT'
 ] + list(reserved.values())
 
 # Regular expression rules for tokens
@@ -27,6 +27,9 @@ t_LESS = r'<'
 t_GREATER = r'>'
 t_LBRACE = r'\{'
 t_RBRACE = r'\}'
+t_AND = r'&&'
+t_OR = r'\|\|'
+t_NOT = r'!'
 
 # Ignore spaces and tabs
 t_ignore = ' \t'

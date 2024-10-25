@@ -1,4 +1,8 @@
-x = 'A';
-y = "Hello";
-print(x);
-print(y);
+x = 10;
+y = 5;
+xd = x > y;
+dx = x < y;
+
+if (xd || dc) {
+    print(xd);
+}

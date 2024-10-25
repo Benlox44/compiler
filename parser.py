@@ -6,9 +6,12 @@ variables = {}
 
 # Operator precedence
 precedence = (
+    ('left', 'OR'),
+    ('left', 'AND'),
+    ('right', 'NOT'),
+    ('left', 'LESS', 'GREATER'),
     ('left', 'PLUS', 'MINUS'),
     ('left', 'TIMES', 'DIVIDE'),
-    ('left', 'LESS', 'GREATER'),
 )
 
 # AST node classes
@@ -26,7 +29,7 @@ class String:
     def evaluate(self):
         return self.value
 
-class Char:  # New class for character literals
+class Char:
     def __init__(self, value):
         self.value = value
 
@@ -56,6 +59,15 @@ class BinOp:
         if self.op == '/': return left_val / right_val
         if self.op == '<': return left_val < right_val
         if self.op == '>': return left_val > right_val
+        if self.op == '&&': return left_val and right_val
+        if self.op == '||': return left_val or right_val
+
+class NotOp:
+    def __init__(self, expression):
+        self.expression = expression
+
+    def evaluate(self):
+        return not self.expression.evaluate()
 
 class Assign:
     def __init__(self, name, expression):
@@ -139,8 +151,14 @@ def p_expression_binop(p):
                   | expression TIMES expression
                   | expression DIVIDE expression
                   | expression LESS expression
-                  | expression GREATER expression'''
+                  | expression GREATER expression
+                  | expression AND expression
+                  | expression OR expression'''
     p[0] = BinOp(p[1], p[2], p[3])
+
+def p_expression_not(p):
+    'expression : NOT expression'
+    p[0] = NotOp(p[2])
 
 def p_expression_group(p):
     'expression : LPAREN expression RPAREN'
@@ -155,7 +173,7 @@ def p_expression_string(p):
     p[0] = String(p[1])
 
 def p_expression_char(p):
-    'expression : CHAR'  # New rule for CHAR
+    'expression : CHAR'
     p[0] = Char(p[1])
 
 def p_expression_variable(p):
