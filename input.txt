@@ -1,8 +1,4 @@
-x = 10;
-y = 20;
-z = x + y;
-print(z);
-
-name = "John";
-greeting = "Hello " + name;
-print(greeting);
+x = 'A';
+y = "Hello";
+print(x);
+print(y);

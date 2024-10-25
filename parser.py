@@ -1,13 +1,14 @@
 import ply.yacc as yacc
 from lexer import tokens
 
-# Runtime symbol table for storing variables
+# Runtime symbol table for variables
 variables = {}
 
-# Arithmetic operation precedence
+# Operator precedence
 precedence = (
     ('left', 'PLUS', 'MINUS'),
     ('left', 'TIMES', 'DIVIDE'),
+    ('left', 'LESS', 'GREATER'),
 )
 
 # AST node classes
@@ -19,6 +20,13 @@ class Number:
         return self.value
 
 class String:
+    def __init__(self, value):
+        self.value = value
+
+    def evaluate(self):
+        return self.value
+
+class Char:  # New class for character literals
     def __init__(self, value):
         self.value = value
 
@@ -46,6 +54,8 @@ class BinOp:
         if self.op == '-': return left_val - right_val
         if self.op == '*': return left_val * right_val
         if self.op == '/': return left_val / right_val
+        if self.op == '<': return left_val < right_val
+        if self.op == '>': return left_val > right_val
 
 class Assign:
     def __init__(self, name, expression):
@@ -61,6 +71,26 @@ class Print:
 
     def execute(self):
         print(self.expression.evaluate())
+
+class IfElse:
+    def __init__(self, condition, if_block, else_block=None):
+        self.condition = condition
+        self.if_block = if_block
+        self.else_block = else_block
+
+    def execute(self):
+        if self.condition.evaluate():
+            self.if_block.execute()
+        elif self.else_block:
+            self.else_block.execute()
+
+class Block:
+    def __init__(self, statements):
+        self.statements = statements
+
+    def execute(self):
+        for stmt in self.statements:
+            stmt.execute()
 
 # Grammar rules
 def p_program(p):
@@ -79,7 +109,8 @@ def p_statement_list(p):
 
 def p_statement(p):
     '''statement : print_statement
-                 | assign_statement'''
+                 | assign_statement
+                 | if_statement'''
     p[0] = p[1]
 
 def p_print_statement(p):
@@ -90,11 +121,25 @@ def p_assign_statement(p):
     'assign_statement : ID EQUALS expression SEMICOLON'
     p[0] = Assign(p[1], p[3])
 
+def p_if_statement(p):
+    '''if_statement : IF LPAREN expression RPAREN block
+                    | IF LPAREN expression RPAREN block ELSE block'''
+    if len(p) == 6:
+        p[0] = IfElse(p[3], p[5])
+    else:
+        p[0] = IfElse(p[3], p[5], p[7])
+
+def p_block(p):
+    'block : LBRACE statement_list RBRACE'
+    p[0] = Block(p[2])
+
 def p_expression_binop(p):
     '''expression : expression PLUS expression
                   | expression MINUS expression
                   | expression TIMES expression
-                  | expression DIVIDE expression'''
+                  | expression DIVIDE expression
+                  | expression LESS expression
+                  | expression GREATER expression'''
     p[0] = BinOp(p[1], p[2], p[3])
 
 def p_expression_group(p):
@@ -108,6 +153,10 @@ def p_expression_number(p):
 def p_expression_string(p):
     'expression : STRING'
     p[0] = String(p[1])
+
+def p_expression_char(p):
+    'expression : CHAR'  # New rule for CHAR
+    p[0] = Char(p[1])
 
 def p_expression_variable(p):
     'expression : ID'
