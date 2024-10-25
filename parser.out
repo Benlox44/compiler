@@ -1,0 +1,337 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> statement
+Rule 1     statement -> ID EQUALS expression
+Rule 2     statement -> PRINT LPAREN expression RPAREN
+Rule 3     expression -> ID
+Rule 4     expression -> expression PLUS term
+Rule 5     expression -> expression MINUS term
+Rule 6     term -> term MULTIPLY factor
+Rule 7     term -> term DIVIDE factor
+Rule 8     expression -> term
+Rule 9     term -> factor
+Rule 10    factor -> NUMBER
+Rule 11    factor -> LPAREN expression RPAREN
+
+Terminals, with rules where they appear
+
+DIVIDE               : 7
+EQUALS               : 1
+ID                   : 1 3
+LPAREN               : 2 11
+MINUS                : 5
+MULTIPLY             : 6
+NUMBER               : 10
+PLUS                 : 4
+PRINT                : 2
+RPAREN               : 2 11
+error                : 
+
+Nonterminals, with rules where they appear
+
+expression           : 1 2 4 5 11
+factor               : 6 7 9
+statement            : 0
+term                 : 4 5 6 7 8
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . statement
+    (1) statement -> . ID EQUALS expression
+    (2) statement -> . PRINT LPAREN expression RPAREN
+
+    ID              shift and go to state 2
+    PRINT           shift and go to state 3
+
+    statement                      shift and go to state 1
+
+state 1
+
+    (0) S' -> statement .
+
+
+
+state 2
+
+    (1) statement -> ID . EQUALS expression
+
+    EQUALS          shift and go to state 4
+
+
+state 3
+
+    (2) statement -> PRINT . LPAREN expression RPAREN
+
+    LPAREN          shift and go to state 5
+
+
+state 4
+
+    (1) statement -> ID EQUALS . expression
+    (3) expression -> . ID
+    (4) expression -> . expression PLUS term
+    (5) expression -> . expression MINUS term
+    (8) expression -> . term
+    (6) term -> . term MULTIPLY factor
+    (7) term -> . term DIVIDE factor
+    (9) term -> . factor
+    (10) factor -> . NUMBER
+    (11) factor -> . LPAREN expression RPAREN
+
+    ID              shift and go to state 6
+    NUMBER          shift and go to state 10
+    LPAREN          shift and go to state 11
+
+    expression                     shift and go to state 7
+    term                           shift and go to state 8
+    factor                         shift and go to state 9
+
+state 5
+
+    (2) statement -> PRINT LPAREN . expression RPAREN
+    (3) expression -> . ID
+    (4) expression -> . expression PLUS term
+    (5) expression -> . expression MINUS term
+    (8) expression -> . term
+    (6) term -> . term MULTIPLY factor
+    (7) term -> . term DIVIDE factor
+    (9) term -> . factor
+    (10) factor -> . NUMBER
+    (11) factor -> . LPAREN expression RPAREN
+
+    ID              shift and go to state 6
+    NUMBER          shift and go to state 10
+    LPAREN          shift and go to state 11
+
+    expression                     shift and go to state 12
+    term                           shift and go to state 8
+    factor                         shift and go to state 9
+
+state 6
+
+    (3) expression -> ID .
+
+    PLUS            reduce using rule 3 (expression -> ID .)
+    MINUS           reduce using rule 3 (expression -> ID .)
+    $end            reduce using rule 3 (expression -> ID .)
+    RPAREN          reduce using rule 3 (expression -> ID .)
+
+
+state 7
+
+    (1) statement -> ID EQUALS expression .
+    (4) expression -> expression . PLUS term
+    (5) expression -> expression . MINUS term
+
+    $end            reduce using rule 1 (statement -> ID EQUALS expression .)
+    PLUS            shift and go to state 13
+    MINUS           shift and go to state 14
+
+
+state 8
+
+    (8) expression -> term .
+    (6) term -> term . MULTIPLY factor
+    (7) term -> term . DIVIDE factor
+
+    PLUS            reduce using rule 8 (expression -> term .)
+    MINUS           reduce using rule 8 (expression -> term .)
+    $end            reduce using rule 8 (expression -> term .)
+    RPAREN          reduce using rule 8 (expression -> term .)
+    MULTIPLY        shift and go to state 15
+    DIVIDE          shift and go to state 16
+
+
+state 9
+
+    (9) term -> factor .
+
+    MULTIPLY        reduce using rule 9 (term -> factor .)
+    DIVIDE          reduce using rule 9 (term -> factor .)
+    PLUS            reduce using rule 9 (term -> factor .)
+    MINUS           reduce using rule 9 (term -> factor .)
+    $end            reduce using rule 9 (term -> factor .)
+    RPAREN          reduce using rule 9 (term -> factor .)
+
+
+state 10
+
+    (10) factor -> NUMBER .
+
+    MULTIPLY        reduce using rule 10 (factor -> NUMBER .)
+    DIVIDE          reduce using rule 10 (factor -> NUMBER .)
+    PLUS            reduce using rule 10 (factor -> NUMBER .)
+    MINUS           reduce using rule 10 (factor -> NUMBER .)
+    $end            reduce using rule 10 (factor -> NUMBER .)
+    RPAREN          reduce using rule 10 (factor -> NUMBER .)
+
+
+state 11
+
+    (11) factor -> LPAREN . expression RPAREN
+    (3) expression -> . ID
+    (4) expression -> . expression PLUS term
+    (5) expression -> . expression MINUS term
+    (8) expression -> . term
+    (6) term -> . term MULTIPLY factor
+    (7) term -> . term DIVIDE factor
+    (9) term -> . factor
+    (10) factor -> . NUMBER
+    (11) factor -> . LPAREN expression RPAREN
+
+    ID              shift and go to state 6
+    NUMBER          shift and go to state 10
+    LPAREN          shift and go to state 11
+
+    expression                     shift and go to state 17
+    term                           shift and go to state 8
+    factor                         shift and go to state 9
+
+state 12
+
+    (2) statement -> PRINT LPAREN expression . RPAREN
+    (4) expression -> expression . PLUS term
+    (5) expression -> expression . MINUS term
+
+    RPAREN          shift and go to state 18
+    PLUS            shift and go to state 13
+    MINUS           shift and go to state 14
+
+
+state 13
+
+    (4) expression -> expression PLUS . term
+    (6) term -> . term MULTIPLY factor
+    (7) term -> . term DIVIDE factor
+    (9) term -> . factor
+    (10) factor -> . NUMBER
+    (11) factor -> . LPAREN expression RPAREN
+
+    NUMBER          shift and go to state 10
+    LPAREN          shift and go to state 11
+
+    term                           shift and go to state 19
+    factor                         shift and go to state 9
+
+state 14
+
+    (5) expression -> expression MINUS . term
+    (6) term -> . term MULTIPLY factor
+    (7) term -> . term DIVIDE factor
+    (9) term -> . factor
+    (10) factor -> . NUMBER
+    (11) factor -> . LPAREN expression RPAREN
+
+    NUMBER          shift and go to state 10
+    LPAREN          shift and go to state 11
+
+    term                           shift and go to state 20
+    factor                         shift and go to state 9
+
+state 15
+
+    (6) term -> term MULTIPLY . factor
+    (10) factor -> . NUMBER
+    (11) factor -> . LPAREN expression RPAREN
+
+    NUMBER          shift and go to state 10
+    LPAREN          shift and go to state 11
+
+    factor                         shift and go to state 21
+
+state 16
+
+    (7) term -> term DIVIDE . factor
+    (10) factor -> . NUMBER
+    (11) factor -> . LPAREN expression RPAREN
+
+    NUMBER          shift and go to state 10
+    LPAREN          shift and go to state 11
+
+    factor                         shift and go to state 22
+
+state 17
+
+    (11) factor -> LPAREN expression . RPAREN
+    (4) expression -> expression . PLUS term
+    (5) expression -> expression . MINUS term
+
+    RPAREN          shift and go to state 23
+    PLUS            shift and go to state 13
+    MINUS           shift and go to state 14
+
+
+state 18
+
+    (2) statement -> PRINT LPAREN expression RPAREN .
+
+    $end            reduce using rule 2 (statement -> PRINT LPAREN expression RPAREN .)
+
+
+state 19
+
+    (4) expression -> expression PLUS term .
+    (6) term -> term . MULTIPLY factor
+    (7) term -> term . DIVIDE factor
+
+    PLUS            reduce using rule 4 (expression -> expression PLUS term .)
+    MINUS           reduce using rule 4 (expression -> expression PLUS term .)
+    $end            reduce using rule 4 (expression -> expression PLUS term .)
+    RPAREN          reduce using rule 4 (expression -> expression PLUS term .)
+    MULTIPLY        shift and go to state 15
+    DIVIDE          shift and go to state 16
+
+
+state 20
+
+    (5) expression -> expression MINUS term .
+    (6) term -> term . MULTIPLY factor
+    (7) term -> term . DIVIDE factor
+
+    PLUS            reduce using rule 5 (expression -> expression MINUS term .)
+    MINUS           reduce using rule 5 (expression -> expression MINUS term .)
+    $end            reduce using rule 5 (expression -> expression MINUS term .)
+    RPAREN          reduce using rule 5 (expression -> expression MINUS term .)
+    MULTIPLY        shift and go to state 15
+    DIVIDE          shift and go to state 16
+
+
+state 21
+
+    (6) term -> term MULTIPLY factor .
+
+    MULTIPLY        reduce using rule 6 (term -> term MULTIPLY factor .)
+    DIVIDE          reduce using rule 6 (term -> term MULTIPLY factor .)
+    PLUS            reduce using rule 6 (term -> term MULTIPLY factor .)
+    MINUS           reduce using rule 6 (term -> term MULTIPLY factor .)
+    $end            reduce using rule 6 (term -> term MULTIPLY factor .)
+    RPAREN          reduce using rule 6 (term -> term MULTIPLY factor .)
+
+
+state 22
+
+    (7) term -> term DIVIDE factor .
+
+    MULTIPLY        reduce using rule 7 (term -> term DIVIDE factor .)
+    DIVIDE          reduce using rule 7 (term -> term DIVIDE factor .)
+    PLUS            reduce using rule 7 (term -> term DIVIDE factor .)
+    MINUS           reduce using rule 7 (term -> term DIVIDE factor .)
+    $end            reduce using rule 7 (term -> term DIVIDE factor .)
+    RPAREN          reduce using rule 7 (term -> term DIVIDE factor .)
+
+
+state 23
+
+    (11) factor -> LPAREN expression RPAREN .
+
+    MULTIPLY        reduce using rule 11 (factor -> LPAREN expression RPAREN .)
+    DIVIDE          reduce using rule 11 (factor -> LPAREN expression RPAREN .)
+    PLUS            reduce using rule 11 (factor -> LPAREN expression RPAREN .)
+    MINUS           reduce using rule 11 (factor -> LPAREN expression RPAREN .)
+    $end            reduce using rule 11 (factor -> LPAREN expression RPAREN .)
+    RPAREN          reduce using rule 11 (factor -> LPAREN expression RPAREN .)
+
