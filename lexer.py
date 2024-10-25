@@ -11,12 +11,15 @@ reserved = {
 tokens = [
     'NUMBER', 'ID', 'EQUALS', 'PLUS', 'MINUS', 'TIMES', 'DIVIDE',
     'LPAREN', 'RPAREN', 'STRING', 'CHAR', 'SEMICOLON', 'LESS', 'GREATER',
-    'LBRACE', 'RBRACE', 'AND', 'OR', 'NOT', 'BOOLEAN', 'EQ', 'NEQ'
+    'LEQ', 'GEQ', 'LBRACE', 'RBRACE', 'AND', 'OR', 'NOT', 'BOOLEAN',
+    'EQ', 'NEQ'
 ] + list(reserved.values())
 
 # Regular expression rules for tokens
 t_EQ = r'=='
 t_NEQ = r'!='
+t_LEQ = r'<='
+t_GEQ = r'>='
 t_PLUS = r'\+'
 t_MINUS = r'-'
 t_TIMES = r'\*'
@@ -65,6 +68,10 @@ def t_NUMBER(t):
     r'\d+'
     t.value = int(t.value)
     return t
+
+def t_COMMENT(t):
+    r'//.*'
+    pass  # Ignorar los comentarios
 
 # Track line numbers
 def t_newline(t):

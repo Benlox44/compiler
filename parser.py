@@ -8,11 +8,11 @@ variables = {}
 precedence = (
     ('left', 'OR'),
     ('left', 'AND'),
-    ('left', 'EQ', 'NEQ'),   # Precedencia para == y !=
-    ('left', 'LESS', 'GREATER'),
+    ('left', 'EQ', 'NEQ'),
+    ('left', 'LESS', 'GREATER', 'LEQ', 'GEQ'),
     ('left', 'PLUS', 'MINUS'),
     ('left', 'TIMES', 'DIVIDE'),
-    ('right', 'NOT'),         # Operador unario NOT
+    ('right', 'NOT'),  # Operador unario NOT
 )
 
 # AST node classes
@@ -67,6 +67,8 @@ class BinOp:
         if self.op == '/': return left_val / right_val
         if self.op == '<': return left_val < right_val
         if self.op == '>': return left_val > right_val
+        if self.op == '<=': return left_val <= right_val
+        if self.op == '>=': return left_val >= right_val
         if self.op == '==': return left_val == right_val
         if self.op == '!=': return left_val != right_val
         if self.op == '&&': return left_val and right_val
@@ -162,6 +164,8 @@ def p_expression_binop(p):
                   | expression DIVIDE expression
                   | expression LESS expression
                   | expression GREATER expression
+                  | expression LEQ expression
+                  | expression GEQ expression
                   | expression EQ expression
                   | expression NEQ expression
                   | expression AND expression
