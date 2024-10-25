@@ -1,4 +1,10 @@
-x = true;
-if (x) {
-    print(x);
+x = "xd";
+y = "x";
+
+if (x != true) {
+    print("x es verdadero");
+}
+
+if (x == y) {
+    print("x y y son diferentes");
 }
