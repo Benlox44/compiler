@@ -1,5 +1,8 @@
-x = 10
-y = 5
-z = x + y
-print(z)
-print(x * y)
+x = 10;
+y = 20;
+z = x + y;
+print(z);
+
+name = "John";
+greeting = "Hello " + name;
+print(greeting);

@@ -1,14 +1,10 @@
 from parser import parser
 
-# Leer el contenido del archivo input.txt
-with open('input.txt', 'r') as file:
-    code = file.readlines()
+# Read the input file and execute the program
+with open('input.txt', 'r', encoding='utf-8') as file:
+    code = file.read()
 
-# Procesar cada línea del archivo
-for line in code:
-    line = line.strip()  # Eliminar espacios o saltos de línea
-    if line:  # Solo procesar si la línea no está vacía
-        try:
-            parser.parse(line)
-        except Exception as e:
-            print(f"Error procesando la línea '{line}': {e}")
+try:
+    parser.parse(code)
+except Exception as e:
+    print(f"Error: {e}")
