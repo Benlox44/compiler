@@ -36,6 +36,13 @@ class Char:
     def evaluate(self):
         return self.value
 
+class Boolean:
+    def __init__(self, value):
+        self.value = value
+
+    def evaluate(self):
+        return self.value
+
 class Variable:
     def __init__(self, name):
         self.name = name
@@ -175,6 +182,10 @@ def p_expression_string(p):
 def p_expression_char(p):
     'expression : CHAR'
     p[0] = Char(p[1])
+
+def p_expression_boolean(p):
+    'expression : BOOLEAN'
+    p[0] = Boolean(p[1])
 
 def p_expression_variable(p):
     'expression : ID'

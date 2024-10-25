@@ -1,8 +1,4 @@
-x = 10;
-y = 5;
-xd = x > y;
-dx = x < y;
-
-if (xd || dc) {
-    print(xd);
+x = true;
+if (x) {
+    print(x);
 }

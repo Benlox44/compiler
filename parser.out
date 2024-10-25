@@ -27,17 +27,19 @@ Rule 21    expression -> LPAREN expression RPAREN
 Rule 22    expression -> NUMBER
 Rule 23    expression -> STRING
 Rule 24    expression -> CHAR
-Rule 25    expression -> ID
+Rule 25    expression -> BOOLEAN
+Rule 26    expression -> ID
 
 Terminals, with rules where they appear
 
 AND                  : 18
+BOOLEAN              : 25
 CHAR                 : 24
 DIVIDE               : 15
 ELSE                 : 10
 EQUALS               : 8
 GREATER              : 17
-ID                   : 8 25
+ID                   : 8 26
 IF                   : 9 10
 LBRACE               : 11
 LESS                 : 16
@@ -214,14 +216,16 @@ state 11
     (22) expression -> . NUMBER
     (23) expression -> . STRING
     (24) expression -> . CHAR
-    (25) expression -> . ID
+    (25) expression -> . BOOLEAN
+    (26) expression -> . ID
 
     NOT             shift and go to state 16
     LPAREN          shift and go to state 14
     NUMBER          shift and go to state 17
     STRING          shift and go to state 18
     CHAR            shift and go to state 19
-    ID              shift and go to state 20
+    BOOLEAN         shift and go to state 20
+    ID              shift and go to state 21
 
     expression                     shift and go to state 15
 
@@ -241,16 +245,18 @@ state 12
     (22) expression -> . NUMBER
     (23) expression -> . STRING
     (24) expression -> . CHAR
-    (25) expression -> . ID
+    (25) expression -> . BOOLEAN
+    (26) expression -> . ID
 
     NOT             shift and go to state 16
     LPAREN          shift and go to state 14
     NUMBER          shift and go to state 17
     STRING          shift and go to state 18
     CHAR            shift and go to state 19
-    ID              shift and go to state 20
+    BOOLEAN         shift and go to state 20
+    ID              shift and go to state 21
 
-    expression                     shift and go to state 21
+    expression                     shift and go to state 22
 
 state 13
 
@@ -269,16 +275,18 @@ state 13
     (22) expression -> . NUMBER
     (23) expression -> . STRING
     (24) expression -> . CHAR
-    (25) expression -> . ID
+    (25) expression -> . BOOLEAN
+    (26) expression -> . ID
 
     NOT             shift and go to state 16
     LPAREN          shift and go to state 14
     NUMBER          shift and go to state 17
     STRING          shift and go to state 18
     CHAR            shift and go to state 19
-    ID              shift and go to state 20
+    BOOLEAN         shift and go to state 20
+    ID              shift and go to state 21
 
-    expression                     shift and go to state 22
+    expression                     shift and go to state 23
 
 state 14
 
@@ -296,16 +304,18 @@ state 14
     (22) expression -> . NUMBER
     (23) expression -> . STRING
     (24) expression -> . CHAR
-    (25) expression -> . ID
+    (25) expression -> . BOOLEAN
+    (26) expression -> . ID
 
     NOT             shift and go to state 16
     LPAREN          shift and go to state 14
     NUMBER          shift and go to state 17
     STRING          shift and go to state 18
     CHAR            shift and go to state 19
-    ID              shift and go to state 20
+    BOOLEAN         shift and go to state 20
+    ID              shift and go to state 21
 
-    expression                     shift and go to state 23
+    expression                     shift and go to state 24
 
 state 15
 
@@ -319,15 +329,15 @@ state 15
     (18) expression -> expression . AND expression
     (19) expression -> expression . OR expression
 
-    RPAREN          shift and go to state 24
-    PLUS            shift and go to state 25
-    MINUS           shift and go to state 26
-    TIMES           shift and go to state 27
-    DIVIDE          shift and go to state 28
-    LESS            shift and go to state 29
-    GREATER         shift and go to state 30
-    AND             shift and go to state 31
-    OR              shift and go to state 32
+    RPAREN          shift and go to state 25
+    PLUS            shift and go to state 26
+    MINUS           shift and go to state 27
+    TIMES           shift and go to state 28
+    DIVIDE          shift and go to state 29
+    LESS            shift and go to state 30
+    GREATER         shift and go to state 31
+    AND             shift and go to state 32
+    OR              shift and go to state 33
 
 
 state 16
@@ -346,16 +356,18 @@ state 16
     (22) expression -> . NUMBER
     (23) expression -> . STRING
     (24) expression -> . CHAR
-    (25) expression -> . ID
+    (25) expression -> . BOOLEAN
+    (26) expression -> . ID
 
     NOT             shift and go to state 16
     LPAREN          shift and go to state 14
     NUMBER          shift and go to state 17
     STRING          shift and go to state 18
     CHAR            shift and go to state 19
-    ID              shift and go to state 20
+    BOOLEAN         shift and go to state 20
+    ID              shift and go to state 21
 
-    expression                     shift and go to state 33
+    expression                     shift and go to state 34
 
 state 17
 
@@ -407,21 +419,37 @@ state 19
 
 state 20
 
-    (25) expression -> ID .
+    (25) expression -> BOOLEAN .
 
-    RPAREN          reduce using rule 25 (expression -> ID .)
-    PLUS            reduce using rule 25 (expression -> ID .)
-    MINUS           reduce using rule 25 (expression -> ID .)
-    TIMES           reduce using rule 25 (expression -> ID .)
-    DIVIDE          reduce using rule 25 (expression -> ID .)
-    LESS            reduce using rule 25 (expression -> ID .)
-    GREATER         reduce using rule 25 (expression -> ID .)
-    AND             reduce using rule 25 (expression -> ID .)
-    OR              reduce using rule 25 (expression -> ID .)
-    SEMICOLON       reduce using rule 25 (expression -> ID .)
+    RPAREN          reduce using rule 25 (expression -> BOOLEAN .)
+    PLUS            reduce using rule 25 (expression -> BOOLEAN .)
+    MINUS           reduce using rule 25 (expression -> BOOLEAN .)
+    TIMES           reduce using rule 25 (expression -> BOOLEAN .)
+    DIVIDE          reduce using rule 25 (expression -> BOOLEAN .)
+    LESS            reduce using rule 25 (expression -> BOOLEAN .)
+    GREATER         reduce using rule 25 (expression -> BOOLEAN .)
+    AND             reduce using rule 25 (expression -> BOOLEAN .)
+    OR              reduce using rule 25 (expression -> BOOLEAN .)
+    SEMICOLON       reduce using rule 25 (expression -> BOOLEAN .)
 
 
 state 21
+
+    (26) expression -> ID .
+
+    RPAREN          reduce using rule 26 (expression -> ID .)
+    PLUS            reduce using rule 26 (expression -> ID .)
+    MINUS           reduce using rule 26 (expression -> ID .)
+    TIMES           reduce using rule 26 (expression -> ID .)
+    DIVIDE          reduce using rule 26 (expression -> ID .)
+    LESS            reduce using rule 26 (expression -> ID .)
+    GREATER         reduce using rule 26 (expression -> ID .)
+    AND             reduce using rule 26 (expression -> ID .)
+    OR              reduce using rule 26 (expression -> ID .)
+    SEMICOLON       reduce using rule 26 (expression -> ID .)
+
+
+state 22
 
     (8) assign_statement -> ID EQUALS expression . SEMICOLON
     (12) expression -> expression . PLUS expression
@@ -433,18 +461,18 @@ state 21
     (18) expression -> expression . AND expression
     (19) expression -> expression . OR expression
 
-    SEMICOLON       shift and go to state 34
-    PLUS            shift and go to state 25
-    MINUS           shift and go to state 26
-    TIMES           shift and go to state 27
-    DIVIDE          shift and go to state 28
-    LESS            shift and go to state 29
-    GREATER         shift and go to state 30
-    AND             shift and go to state 31
-    OR              shift and go to state 32
+    SEMICOLON       shift and go to state 35
+    PLUS            shift and go to state 26
+    MINUS           shift and go to state 27
+    TIMES           shift and go to state 28
+    DIVIDE          shift and go to state 29
+    LESS            shift and go to state 30
+    GREATER         shift and go to state 31
+    AND             shift and go to state 32
+    OR              shift and go to state 33
 
 
-state 22
+state 23
 
     (9) if_statement -> IF LPAREN expression . RPAREN block
     (10) if_statement -> IF LPAREN expression . RPAREN block ELSE block
@@ -457,18 +485,18 @@ state 22
     (18) expression -> expression . AND expression
     (19) expression -> expression . OR expression
 
-    RPAREN          shift and go to state 35
-    PLUS            shift and go to state 25
-    MINUS           shift and go to state 26
-    TIMES           shift and go to state 27
-    DIVIDE          shift and go to state 28
-    LESS            shift and go to state 29
-    GREATER         shift and go to state 30
-    AND             shift and go to state 31
-    OR              shift and go to state 32
+    RPAREN          shift and go to state 36
+    PLUS            shift and go to state 26
+    MINUS           shift and go to state 27
+    TIMES           shift and go to state 28
+    DIVIDE          shift and go to state 29
+    LESS            shift and go to state 30
+    GREATER         shift and go to state 31
+    AND             shift and go to state 32
+    OR              shift and go to state 33
 
 
-state 23
+state 24
 
     (21) expression -> LPAREN expression . RPAREN
     (12) expression -> expression . PLUS expression
@@ -480,25 +508,25 @@ state 23
     (18) expression -> expression . AND expression
     (19) expression -> expression . OR expression
 
-    RPAREN          shift and go to state 36
-    PLUS            shift and go to state 25
-    MINUS           shift and go to state 26
-    TIMES           shift and go to state 27
-    DIVIDE          shift and go to state 28
-    LESS            shift and go to state 29
-    GREATER         shift and go to state 30
-    AND             shift and go to state 31
-    OR              shift and go to state 32
-
-
-state 24
-
-    (7) print_statement -> PRINT LPAREN expression RPAREN . SEMICOLON
-
-    SEMICOLON       shift and go to state 37
+    RPAREN          shift and go to state 37
+    PLUS            shift and go to state 26
+    MINUS           shift and go to state 27
+    TIMES           shift and go to state 28
+    DIVIDE          shift and go to state 29
+    LESS            shift and go to state 30
+    GREATER         shift and go to state 31
+    AND             shift and go to state 32
+    OR              shift and go to state 33
 
 
 state 25
+
+    (7) print_statement -> PRINT LPAREN expression RPAREN . SEMICOLON
+
+    SEMICOLON       shift and go to state 38
+
+
+state 26
 
     (12) expression -> expression PLUS . expression
     (12) expression -> . expression PLUS expression
@@ -514,18 +542,20 @@ state 25
     (22) expression -> . NUMBER
     (23) expression -> . STRING
     (24) expression -> . CHAR
-    (25) expression -> . ID
+    (25) expression -> . BOOLEAN
+    (26) expression -> . ID
 
     NOT             shift and go to state 16
     LPAREN          shift and go to state 14
     NUMBER          shift and go to state 17
     STRING          shift and go to state 18
     CHAR            shift and go to state 19
-    ID              shift and go to state 20
+    BOOLEAN         shift and go to state 20
+    ID              shift and go to state 21
 
-    expression                     shift and go to state 38
+    expression                     shift and go to state 39
 
-state 26
+state 27
 
     (13) expression -> expression MINUS . expression
     (12) expression -> . expression PLUS expression
@@ -541,18 +571,20 @@ state 26
     (22) expression -> . NUMBER
     (23) expression -> . STRING
     (24) expression -> . CHAR
-    (25) expression -> . ID
+    (25) expression -> . BOOLEAN
+    (26) expression -> . ID
 
     NOT             shift and go to state 16
     LPAREN          shift and go to state 14
     NUMBER          shift and go to state 17
     STRING          shift and go to state 18
     CHAR            shift and go to state 19
-    ID              shift and go to state 20
+    BOOLEAN         shift and go to state 20
+    ID              shift and go to state 21
 
-    expression                     shift and go to state 39
+    expression                     shift and go to state 40
 
-state 27
+state 28
 
     (14) expression -> expression TIMES . expression
     (12) expression -> . expression PLUS expression
@@ -568,18 +600,20 @@ state 27
     (22) expression -> . NUMBER
     (23) expression -> . STRING
     (24) expression -> . CHAR
-    (25) expression -> . ID
+    (25) expression -> . BOOLEAN
+    (26) expression -> . ID
 
     NOT             shift and go to state 16
     LPAREN          shift and go to state 14
     NUMBER          shift and go to state 17
     STRING          shift and go to state 18
     CHAR            shift and go to state 19
-    ID              shift and go to state 20
+    BOOLEAN         shift and go to state 20
+    ID              shift and go to state 21
 
-    expression                     shift and go to state 40
+    expression                     shift and go to state 41
 
-state 28
+state 29
 
     (15) expression -> expression DIVIDE . expression
     (12) expression -> . expression PLUS expression
@@ -595,18 +629,20 @@ state 28
     (22) expression -> . NUMBER
     (23) expression -> . STRING
     (24) expression -> . CHAR
-    (25) expression -> . ID
+    (25) expression -> . BOOLEAN
+    (26) expression -> . ID
 
     NOT             shift and go to state 16
     LPAREN          shift and go to state 14
     NUMBER          shift and go to state 17
     STRING          shift and go to state 18
     CHAR            shift and go to state 19
-    ID              shift and go to state 20
+    BOOLEAN         shift and go to state 20
+    ID              shift and go to state 21
 
-    expression                     shift and go to state 41
+    expression                     shift and go to state 42
 
-state 29
+state 30
 
     (16) expression -> expression LESS . expression
     (12) expression -> . expression PLUS expression
@@ -622,18 +658,20 @@ state 29
     (22) expression -> . NUMBER
     (23) expression -> . STRING
     (24) expression -> . CHAR
-    (25) expression -> . ID
+    (25) expression -> . BOOLEAN
+    (26) expression -> . ID
 
     NOT             shift and go to state 16
     LPAREN          shift and go to state 14
     NUMBER          shift and go to state 17
     STRING          shift and go to state 18
     CHAR            shift and go to state 19
-    ID              shift and go to state 20
+    BOOLEAN         shift and go to state 20
+    ID              shift and go to state 21
 
-    expression                     shift and go to state 42
+    expression                     shift and go to state 43
 
-state 30
+state 31
 
     (17) expression -> expression GREATER . expression
     (12) expression -> . expression PLUS expression
@@ -649,18 +687,20 @@ state 30
     (22) expression -> . NUMBER
     (23) expression -> . STRING
     (24) expression -> . CHAR
-    (25) expression -> . ID
+    (25) expression -> . BOOLEAN
+    (26) expression -> . ID
 
     NOT             shift and go to state 16
     LPAREN          shift and go to state 14
     NUMBER          shift and go to state 17
     STRING          shift and go to state 18
     CHAR            shift and go to state 19
-    ID              shift and go to state 20
+    BOOLEAN         shift and go to state 20
+    ID              shift and go to state 21
 
-    expression                     shift and go to state 43
+    expression                     shift and go to state 44
 
-state 31
+state 32
 
     (18) expression -> expression AND . expression
     (12) expression -> . expression PLUS expression
@@ -676,18 +716,20 @@ state 31
     (22) expression -> . NUMBER
     (23) expression -> . STRING
     (24) expression -> . CHAR
-    (25) expression -> . ID
+    (25) expression -> . BOOLEAN
+    (26) expression -> . ID
 
     NOT             shift and go to state 16
     LPAREN          shift and go to state 14
     NUMBER          shift and go to state 17
     STRING          shift and go to state 18
     CHAR            shift and go to state 19
-    ID              shift and go to state 20
+    BOOLEAN         shift and go to state 20
+    ID              shift and go to state 21
 
-    expression                     shift and go to state 44
+    expression                     shift and go to state 45
 
-state 32
+state 33
 
     (19) expression -> expression OR . expression
     (12) expression -> . expression PLUS expression
@@ -703,18 +745,20 @@ state 32
     (22) expression -> . NUMBER
     (23) expression -> . STRING
     (24) expression -> . CHAR
-    (25) expression -> . ID
+    (25) expression -> . BOOLEAN
+    (26) expression -> . ID
 
     NOT             shift and go to state 16
     LPAREN          shift and go to state 14
     NUMBER          shift and go to state 17
     STRING          shift and go to state 18
     CHAR            shift and go to state 19
-    ID              shift and go to state 20
+    BOOLEAN         shift and go to state 20
+    ID              shift and go to state 21
 
-    expression                     shift and go to state 45
+    expression                     shift and go to state 46
 
-state 33
+state 34
 
     (20) expression -> NOT expression .
     (12) expression -> expression . PLUS expression
@@ -730,12 +774,12 @@ state 33
     AND             reduce using rule 20 (expression -> NOT expression .)
     OR              reduce using rule 20 (expression -> NOT expression .)
     SEMICOLON       reduce using rule 20 (expression -> NOT expression .)
-    PLUS            shift and go to state 25
-    MINUS           shift and go to state 26
-    TIMES           shift and go to state 27
-    DIVIDE          shift and go to state 28
-    LESS            shift and go to state 29
-    GREATER         shift and go to state 30
+    PLUS            shift and go to state 26
+    MINUS           shift and go to state 27
+    TIMES           shift and go to state 28
+    DIVIDE          shift and go to state 29
+    LESS            shift and go to state 30
+    GREATER         shift and go to state 31
 
   ! PLUS            [ reduce using rule 20 (expression -> NOT expression .) ]
   ! MINUS           [ reduce using rule 20 (expression -> NOT expression .) ]
@@ -743,11 +787,11 @@ state 33
   ! DIVIDE          [ reduce using rule 20 (expression -> NOT expression .) ]
   ! LESS            [ reduce using rule 20 (expression -> NOT expression .) ]
   ! GREATER         [ reduce using rule 20 (expression -> NOT expression .) ]
-  ! AND             [ shift and go to state 31 ]
-  ! OR              [ shift and go to state 32 ]
+  ! AND             [ shift and go to state 32 ]
+  ! OR              [ shift and go to state 33 ]
 
 
-state 34
+state 35
 
     (8) assign_statement -> ID EQUALS expression SEMICOLON .
 
@@ -758,17 +802,17 @@ state 34
     RBRACE          reduce using rule 8 (assign_statement -> ID EQUALS expression SEMICOLON .)
 
 
-state 35
+state 36
 
     (9) if_statement -> IF LPAREN expression RPAREN . block
     (10) if_statement -> IF LPAREN expression RPAREN . block ELSE block
     (11) block -> . LBRACE statement_list RBRACE
 
-    LBRACE          shift and go to state 47
+    LBRACE          shift and go to state 48
 
-    block                          shift and go to state 46
+    block                          shift and go to state 47
 
-state 36
+state 37
 
     (21) expression -> LPAREN expression RPAREN .
 
@@ -784,7 +828,7 @@ state 36
     SEMICOLON       reduce using rule 21 (expression -> LPAREN expression RPAREN .)
 
 
-state 37
+state 38
 
     (7) print_statement -> PRINT LPAREN expression RPAREN SEMICOLON .
 
@@ -795,7 +839,7 @@ state 37
     RBRACE          reduce using rule 7 (print_statement -> PRINT LPAREN expression RPAREN SEMICOLON .)
 
 
-state 38
+state 39
 
     (12) expression -> expression PLUS expression .
     (12) expression -> expression . PLUS expression
@@ -815,20 +859,20 @@ state 38
     AND             reduce using rule 12 (expression -> expression PLUS expression .)
     OR              reduce using rule 12 (expression -> expression PLUS expression .)
     SEMICOLON       reduce using rule 12 (expression -> expression PLUS expression .)
-    TIMES           shift and go to state 27
-    DIVIDE          shift and go to state 28
+    TIMES           shift and go to state 28
+    DIVIDE          shift and go to state 29
 
   ! TIMES           [ reduce using rule 12 (expression -> expression PLUS expression .) ]
   ! DIVIDE          [ reduce using rule 12 (expression -> expression PLUS expression .) ]
-  ! PLUS            [ shift and go to state 25 ]
-  ! MINUS           [ shift and go to state 26 ]
-  ! LESS            [ shift and go to state 29 ]
-  ! GREATER         [ shift and go to state 30 ]
-  ! AND             [ shift and go to state 31 ]
-  ! OR              [ shift and go to state 32 ]
+  ! PLUS            [ shift and go to state 26 ]
+  ! MINUS           [ shift and go to state 27 ]
+  ! LESS            [ shift and go to state 30 ]
+  ! GREATER         [ shift and go to state 31 ]
+  ! AND             [ shift and go to state 32 ]
+  ! OR              [ shift and go to state 33 ]
 
 
-state 39
+state 40
 
     (13) expression -> expression MINUS expression .
     (12) expression -> expression . PLUS expression
@@ -848,20 +892,20 @@ state 39
     AND             reduce using rule 13 (expression -> expression MINUS expression .)
     OR              reduce using rule 13 (expression -> expression MINUS expression .)
     SEMICOLON       reduce using rule 13 (expression -> expression MINUS expression .)
-    TIMES           shift and go to state 27
-    DIVIDE          shift and go to state 28
+    TIMES           shift and go to state 28
+    DIVIDE          shift and go to state 29
 
   ! TIMES           [ reduce using rule 13 (expression -> expression MINUS expression .) ]
   ! DIVIDE          [ reduce using rule 13 (expression -> expression MINUS expression .) ]
-  ! PLUS            [ shift and go to state 25 ]
-  ! MINUS           [ shift and go to state 26 ]
-  ! LESS            [ shift and go to state 29 ]
-  ! GREATER         [ shift and go to state 30 ]
-  ! AND             [ shift and go to state 31 ]
-  ! OR              [ shift and go to state 32 ]
+  ! PLUS            [ shift and go to state 26 ]
+  ! MINUS           [ shift and go to state 27 ]
+  ! LESS            [ shift and go to state 30 ]
+  ! GREATER         [ shift and go to state 31 ]
+  ! AND             [ shift and go to state 32 ]
+  ! OR              [ shift and go to state 33 ]
 
 
-state 40
+state 41
 
     (14) expression -> expression TIMES expression .
     (12) expression -> expression . PLUS expression
@@ -884,17 +928,17 @@ state 40
     OR              reduce using rule 14 (expression -> expression TIMES expression .)
     SEMICOLON       reduce using rule 14 (expression -> expression TIMES expression .)
 
-  ! PLUS            [ shift and go to state 25 ]
-  ! MINUS           [ shift and go to state 26 ]
-  ! TIMES           [ shift and go to state 27 ]
-  ! DIVIDE          [ shift and go to state 28 ]
-  ! LESS            [ shift and go to state 29 ]
-  ! GREATER         [ shift and go to state 30 ]
-  ! AND             [ shift and go to state 31 ]
-  ! OR              [ shift and go to state 32 ]
+  ! PLUS            [ shift and go to state 26 ]
+  ! MINUS           [ shift and go to state 27 ]
+  ! TIMES           [ shift and go to state 28 ]
+  ! DIVIDE          [ shift and go to state 29 ]
+  ! LESS            [ shift and go to state 30 ]
+  ! GREATER         [ shift and go to state 31 ]
+  ! AND             [ shift and go to state 32 ]
+  ! OR              [ shift and go to state 33 ]
 
 
-state 41
+state 42
 
     (15) expression -> expression DIVIDE expression .
     (12) expression -> expression . PLUS expression
@@ -917,17 +961,17 @@ state 41
     OR              reduce using rule 15 (expression -> expression DIVIDE expression .)
     SEMICOLON       reduce using rule 15 (expression -> expression DIVIDE expression .)
 
-  ! PLUS            [ shift and go to state 25 ]
-  ! MINUS           [ shift and go to state 26 ]
-  ! TIMES           [ shift and go to state 27 ]
-  ! DIVIDE          [ shift and go to state 28 ]
-  ! LESS            [ shift and go to state 29 ]
-  ! GREATER         [ shift and go to state 30 ]
-  ! AND             [ shift and go to state 31 ]
-  ! OR              [ shift and go to state 32 ]
+  ! PLUS            [ shift and go to state 26 ]
+  ! MINUS           [ shift and go to state 27 ]
+  ! TIMES           [ shift and go to state 28 ]
+  ! DIVIDE          [ shift and go to state 29 ]
+  ! LESS            [ shift and go to state 30 ]
+  ! GREATER         [ shift and go to state 31 ]
+  ! AND             [ shift and go to state 32 ]
+  ! OR              [ shift and go to state 33 ]
 
 
-state 42
+state 43
 
     (16) expression -> expression LESS expression .
     (12) expression -> expression . PLUS expression
@@ -945,22 +989,22 @@ state 42
     AND             reduce using rule 16 (expression -> expression LESS expression .)
     OR              reduce using rule 16 (expression -> expression LESS expression .)
     SEMICOLON       reduce using rule 16 (expression -> expression LESS expression .)
-    PLUS            shift and go to state 25
-    MINUS           shift and go to state 26
-    TIMES           shift and go to state 27
-    DIVIDE          shift and go to state 28
+    PLUS            shift and go to state 26
+    MINUS           shift and go to state 27
+    TIMES           shift and go to state 28
+    DIVIDE          shift and go to state 29
 
   ! PLUS            [ reduce using rule 16 (expression -> expression LESS expression .) ]
   ! MINUS           [ reduce using rule 16 (expression -> expression LESS expression .) ]
   ! TIMES           [ reduce using rule 16 (expression -> expression LESS expression .) ]
   ! DIVIDE          [ reduce using rule 16 (expression -> expression LESS expression .) ]
-  ! LESS            [ shift and go to state 29 ]
-  ! GREATER         [ shift and go to state 30 ]
-  ! AND             [ shift and go to state 31 ]
-  ! OR              [ shift and go to state 32 ]
+  ! LESS            [ shift and go to state 30 ]
+  ! GREATER         [ shift and go to state 31 ]
+  ! AND             [ shift and go to state 32 ]
+  ! OR              [ shift and go to state 33 ]
 
 
-state 43
+state 44
 
     (17) expression -> expression GREATER expression .
     (12) expression -> expression . PLUS expression
@@ -978,22 +1022,22 @@ state 43
     AND             reduce using rule 17 (expression -> expression GREATER expression .)
     OR              reduce using rule 17 (expression -> expression GREATER expression .)
     SEMICOLON       reduce using rule 17 (expression -> expression GREATER expression .)
-    PLUS            shift and go to state 25
-    MINUS           shift and go to state 26
-    TIMES           shift and go to state 27
-    DIVIDE          shift and go to state 28
+    PLUS            shift and go to state 26
+    MINUS           shift and go to state 27
+    TIMES           shift and go to state 28
+    DIVIDE          shift and go to state 29
 
   ! PLUS            [ reduce using rule 17 (expression -> expression GREATER expression .) ]
   ! MINUS           [ reduce using rule 17 (expression -> expression GREATER expression .) ]
   ! TIMES           [ reduce using rule 17 (expression -> expression GREATER expression .) ]
   ! DIVIDE          [ reduce using rule 17 (expression -> expression GREATER expression .) ]
-  ! LESS            [ shift and go to state 29 ]
-  ! GREATER         [ shift and go to state 30 ]
-  ! AND             [ shift and go to state 31 ]
-  ! OR              [ shift and go to state 32 ]
+  ! LESS            [ shift and go to state 30 ]
+  ! GREATER         [ shift and go to state 31 ]
+  ! AND             [ shift and go to state 32 ]
+  ! OR              [ shift and go to state 33 ]
 
 
-state 44
+state 45
 
     (18) expression -> expression AND expression .
     (12) expression -> expression . PLUS expression
@@ -1009,12 +1053,12 @@ state 44
     AND             reduce using rule 18 (expression -> expression AND expression .)
     OR              reduce using rule 18 (expression -> expression AND expression .)
     SEMICOLON       reduce using rule 18 (expression -> expression AND expression .)
-    PLUS            shift and go to state 25
-    MINUS           shift and go to state 26
-    TIMES           shift and go to state 27
-    DIVIDE          shift and go to state 28
-    LESS            shift and go to state 29
-    GREATER         shift and go to state 30
+    PLUS            shift and go to state 26
+    MINUS           shift and go to state 27
+    TIMES           shift and go to state 28
+    DIVIDE          shift and go to state 29
+    LESS            shift and go to state 30
+    GREATER         shift and go to state 31
 
   ! PLUS            [ reduce using rule 18 (expression -> expression AND expression .) ]
   ! MINUS           [ reduce using rule 18 (expression -> expression AND expression .) ]
@@ -1022,11 +1066,11 @@ state 44
   ! DIVIDE          [ reduce using rule 18 (expression -> expression AND expression .) ]
   ! LESS            [ reduce using rule 18 (expression -> expression AND expression .) ]
   ! GREATER         [ reduce using rule 18 (expression -> expression AND expression .) ]
-  ! AND             [ shift and go to state 31 ]
-  ! OR              [ shift and go to state 32 ]
+  ! AND             [ shift and go to state 32 ]
+  ! OR              [ shift and go to state 33 ]
 
 
-state 45
+state 46
 
     (19) expression -> expression OR expression .
     (12) expression -> expression . PLUS expression
@@ -1041,13 +1085,13 @@ state 45
     RPAREN          reduce using rule 19 (expression -> expression OR expression .)
     OR              reduce using rule 19 (expression -> expression OR expression .)
     SEMICOLON       reduce using rule 19 (expression -> expression OR expression .)
-    PLUS            shift and go to state 25
-    MINUS           shift and go to state 26
-    TIMES           shift and go to state 27
-    DIVIDE          shift and go to state 28
-    LESS            shift and go to state 29
-    GREATER         shift and go to state 30
-    AND             shift and go to state 31
+    PLUS            shift and go to state 26
+    MINUS           shift and go to state 27
+    TIMES           shift and go to state 28
+    DIVIDE          shift and go to state 29
+    LESS            shift and go to state 30
+    GREATER         shift and go to state 31
+    AND             shift and go to state 32
 
   ! PLUS            [ reduce using rule 19 (expression -> expression OR expression .) ]
   ! MINUS           [ reduce using rule 19 (expression -> expression OR expression .) ]
@@ -1056,10 +1100,10 @@ state 45
   ! LESS            [ reduce using rule 19 (expression -> expression OR expression .) ]
   ! GREATER         [ reduce using rule 19 (expression -> expression OR expression .) ]
   ! AND             [ reduce using rule 19 (expression -> expression OR expression .) ]
-  ! OR              [ shift and go to state 32 ]
+  ! OR              [ shift and go to state 33 ]
 
 
-state 46
+state 47
 
     (9) if_statement -> IF LPAREN expression RPAREN block .
     (10) if_statement -> IF LPAREN expression RPAREN block . ELSE block
@@ -1069,10 +1113,10 @@ state 46
     IF              reduce using rule 9 (if_statement -> IF LPAREN expression RPAREN block .)
     $end            reduce using rule 9 (if_statement -> IF LPAREN expression RPAREN block .)
     RBRACE          reduce using rule 9 (if_statement -> IF LPAREN expression RPAREN block .)
-    ELSE            shift and go to state 48
+    ELSE            shift and go to state 49
 
 
-state 47
+state 48
 
     (11) block -> LBRACE . statement_list RBRACE
     (2) statement_list -> . statement_list statement
@@ -1089,22 +1133,22 @@ state 47
     ID              shift and go to state 8
     IF              shift and go to state 9
 
-    statement_list                 shift and go to state 49
+    statement_list                 shift and go to state 50
     statement                      shift and go to state 3
     print_statement                shift and go to state 4
     assign_statement               shift and go to state 5
     if_statement                   shift and go to state 6
 
-state 48
+state 49
 
     (10) if_statement -> IF LPAREN expression RPAREN block ELSE . block
     (11) block -> . LBRACE statement_list RBRACE
 
-    LBRACE          shift and go to state 47
+    LBRACE          shift and go to state 48
 
-    block                          shift and go to state 50
+    block                          shift and go to state 51
 
-state 49
+state 50
 
     (11) block -> LBRACE statement_list . RBRACE
     (2) statement_list -> statement_list . statement
@@ -1116,7 +1160,7 @@ state 49
     (9) if_statement -> . IF LPAREN expression RPAREN block
     (10) if_statement -> . IF LPAREN expression RPAREN block ELSE block
 
-    RBRACE          shift and go to state 51
+    RBRACE          shift and go to state 52
     PRINT           shift and go to state 7
     ID              shift and go to state 8
     IF              shift and go to state 9
@@ -1126,7 +1170,7 @@ state 49
     assign_statement               shift and go to state 5
     if_statement                   shift and go to state 6
 
-state 50
+state 51
 
     (10) if_statement -> IF LPAREN expression RPAREN block ELSE block .
 
@@ -1137,7 +1181,7 @@ state 50
     RBRACE          reduce using rule 10 (if_statement -> IF LPAREN expression RPAREN block ELSE block .)
 
 
-state 51
+state 52
 
     (11) block -> LBRACE statement_list RBRACE .
 

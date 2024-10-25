@@ -1,6 +1,6 @@
 import ply.lex as lex
 
-# Reserved words
+# Reserved words (sin 'true' y 'false')
 reserved = {
     'print': 'PRINT',
     'if': 'IF',
@@ -11,7 +11,7 @@ reserved = {
 tokens = [
     'NUMBER', 'ID', 'EQUALS', 'PLUS', 'MINUS', 'TIMES', 'DIVIDE',
     'LPAREN', 'RPAREN', 'STRING', 'CHAR', 'SEMICOLON', 'LESS', 'GREATER',
-    'LBRACE', 'RBRACE', 'AND', 'OR', 'NOT'
+    'LBRACE', 'RBRACE', 'AND', 'OR', 'NOT', 'BOOLEAN'
 ] + list(reserved.values())
 
 # Regular expression rules for tokens
@@ -37,25 +37,31 @@ t_ignore = ' \t'
 # Token for strings (double quotes)
 def t_STRING(t):
     r'\"([^\\\n]|(\\.))*?\"'
-    t.value = t.value[1:-1]  # Remove double quotes
+    t.value = t.value[1:-1]
     return t
 
 # Token for character literals (single quotes)
 def t_CHAR(t):
     r"\'([^\\\n]|(\\.))\'"
-    t.value = t.value[1:-1]  # Remove single quotes
+    t.value = t.value[1:-1]
+    return t
+
+# Token for booleans (true/false)
+def t_BOOLEAN(t):
+    r'true|false'
+    t.value = True if t.value == 'true' else False
     return t
 
 # Token for identifiers (variables)
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*'
-    t.type = reserved.get(t.value, 'ID')  # Check for reserved words
+    t.type = reserved.get(t.value, 'ID')
     return t
 
 # Token for numbers
 def t_NUMBER(t):
     r'\d+'
-    t.value = int(t.value)  # Convert to integer
+    t.value = int(t.value)
     return t
 
 # Track line numbers

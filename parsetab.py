@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'programleftORleftANDrightNOTleftLESSGREATERleftPLUSMINUSleftTIMESDIVIDEAND CHAR DIVIDE ELSE EQUALS GREATER ID IF LBRACE LESS LPAREN MINUS NOT NUMBER OR PLUS PRINT RBRACE RPAREN SEMICOLON STRING TIMESprogram : statement_liststatement_list : statement_list statement\n| statementstatement : print_statement\n| assign_statement\n| if_statementprint_statement : PRINT LPAREN expression RPAREN SEMICOLONassign_statement : ID EQUALS expression SEMICOLONif_statement : IF LPAREN expression RPAREN block\n| IF LPAREN expression RPAREN block ELSE blockblock : LBRACE statement_list RBRACEexpression : expression PLUS expression\n| expression MINUS expression\n| expression TIMES expression\n| expression DIVIDE expression\n| expression LESS expression\n| expression GREATER expression\n| expression AND expression\n| expression OR expressionexpression : NOT expressionexpression : LPAREN expression RPARENexpression : NUMBERexpression : STRINGexpression : CHARexpression : ID'
+_lr_signature = 'programleftORleftANDrightNOTleftLESSGREATERleftPLUSMINUSleftTIMESDIVIDEAND BOOLEAN CHAR DIVIDE ELSE EQUALS GREATER ID IF LBRACE LESS LPAREN MINUS NOT NUMBER OR PLUS PRINT RBRACE RPAREN SEMICOLON STRING TIMESprogram : statement_liststatement_list : statement_list statement\n| statementstatement : print_statement\n| assign_statement\n| if_statementprint_statement : PRINT LPAREN expression RPAREN SEMICOLONassign_statement : ID EQUALS expression SEMICOLONif_statement : IF LPAREN expression RPAREN block\n| IF LPAREN expression RPAREN block ELSE blockblock : LBRACE statement_list RBRACEexpression : expression PLUS expression\n| expression MINUS expression\n| expression TIMES expression\n| expression DIVIDE expression\n| expression LESS expression\n| expression GREATER expression\n| expression AND expression\n| expression OR expressionexpression : NOT expressionexpression : LPAREN expression RPARENexpression : NUMBERexpression : STRINGexpression : CHARexpression : BOOLEANexpression : ID'
     
-_lr_action_items = {'PRINT':([0,2,3,4,5,6,10,34,37,46,47,49,50,51,],[7,7,-3,-4,-5,-6,-2,-8,-7,-9,7,7,-10,-11,]),'ID':([0,2,3,4,5,6,10,11,12,13,14,16,25,26,27,28,29,30,31,32,34,37,46,47,49,50,51,],[8,8,-3,-4,-5,-6,-2,20,20,20,20,20,20,20,20,20,20,20,20,20,-8,-7,-9,8,8,-10,-11,]),'IF':([0,2,3,4,5,6,10,34,37,46,47,49,50,51,],[9,9,-3,-4,-5,-6,-2,-8,-7,-9,9,9,-10,-11,]),'$end':([1,2,3,4,5,6,10,34,37,46,50,51,],[0,-1,-3,-4,-5,-6,-2,-8,-7,-9,-10,-11,]),'RBRACE':([3,4,5,6,10,34,37,46,49,50,51,],[-3,-4,-5,-6,-2,-8,-7,-9,51,-10,-11,]),'LPAREN':([7,9,11,12,13,14,16,25,26,27,28,29,30,31,32,],[11,13,14,14,14,14,14,14,14,14,14,14,14,14,14,]),'EQUALS':([8,],[12,]),'NOT':([11,12,13,14,16,25,26,27,28,29,30,31,32,],[16,16,16,16,16,16,16,16,16,16,16,16,16,]),'NUMBER':([11,12,13,14,16,25,26,27,28,29,30,31,32,],[17,17,17,17,17,17,17,17,17,17,17,17,17,]),'STRING':([11,12,13,14,16,25,26,27,28,29,30,31,32,],[18,18,18,18,18,18,18,18,18,18,18,18,18,]),'CHAR':([11,12,13,14,16,25,26,27,28,29,30,31,32,],[19,19,19,19,19,19,19,19,19,19,19,19,19,]),'RPAREN':([15,17,18,19,20,22,23,33,36,38,39,40,41,42,43,44,45,],[24,-22,-23,-24,-25,35,36,-20,-21,-12,-13,-14,-15,-16,-17,-18,-19,]),'PLUS':([15,17,18,19,20,21,22,23,33,36,38,39,40,41,42,43,44,45,],[25,-22,-23,-24,-25,25,25,25,25,-21,-12,-13,-14,-15,25,25,25,25,]),'MINUS':([15,17,18,19,20,21,22,23,33,36,38,39,40,41,42,43,44,45,],[26,-22,-23,-24,-25,26,26,26,26,-21,-12,-13,-14,-15,26,26,26,26,]),'TIMES':([15,17,18,19,20,21,22,23,33,36,38,39,40,41,42,43,44,45,],[27,-22,-23,-24,-25,27,27,27,27,-21,27,27,-14,-15,27,27,27,27,]),'DIVIDE':([15,17,18,19,20,21,22,23,33,36,38,39,40,41,42,43,44,45,],[28,-22,-23,-24,-25,28,28,28,28,-21,28,28,-14,-15,28,28,28,28,]),'LESS':([15,17,18,19,20,21,22,23,33,36,38,39,40,41,42,43,44,45,],[29,-22,-23,-24,-25,29,29,29,29,-21,-12,-13,-14,-15,-16,-17,29,29,]),'GREATER':([15,17,18,19,20,21,22,23,33,36,38,39,40,41,42,43,44,45,],[30,-22,-23,-24,-25,30,30,30,30,-21,-12,-13,-14,-15,-16,-17,30,30,]),'AND':([15,17,18,19,20,21,22,23,33,36,38,39,40,41,42,43,44,45,],[31,-22,-23,-24,-25,31,31,31,-20,-21,-12,-13,-14,-15,-16,-17,-18,31,]),'OR':([15,17,18,19,20,21,22,23,33,36,38,39,40,41,42,43,44,45,],[32,-22,-23,-24,-25,32,32,32,-20,-21,-12,-13,-14,-15,-16,-17,-18,-19,]),'SEMICOLON':([17,18,19,20,21,24,33,36,38,39,40,41,42,43,44,45,],[-22,-23,-24,-25,34,37,-20,-21,-12,-13,-14,-15,-16,-17,-18,-19,]),'LBRACE':([35,48,],[47,47,]),'ELSE':([46,51,],[48,-11,]),}
+_lr_action_items = {'PRINT':([0,2,3,4,5,6,10,35,38,47,48,50,51,52,],[7,7,-3,-4,-5,-6,-2,-8,-7,-9,7,7,-10,-11,]),'ID':([0,2,3,4,5,6,10,11,12,13,14,16,26,27,28,29,30,31,32,33,35,38,47,48,50,51,52,],[8,8,-3,-4,-5,-6,-2,21,21,21,21,21,21,21,21,21,21,21,21,21,-8,-7,-9,8,8,-10,-11,]),'IF':([0,2,3,4,5,6,10,35,38,47,48,50,51,52,],[9,9,-3,-4,-5,-6,-2,-8,-7,-9,9,9,-10,-11,]),'$end':([1,2,3,4,5,6,10,35,38,47,51,52,],[0,-1,-3,-4,-5,-6,-2,-8,-7,-9,-10,-11,]),'RBRACE':([3,4,5,6,10,35,38,47,50,51,52,],[-3,-4,-5,-6,-2,-8,-7,-9,52,-10,-11,]),'LPAREN':([7,9,11,12,13,14,16,26,27,28,29,30,31,32,33,],[11,13,14,14,14,14,14,14,14,14,14,14,14,14,14,]),'EQUALS':([8,],[12,]),'NOT':([11,12,13,14,16,26,27,28,29,30,31,32,33,],[16,16,16,16,16,16,16,16,16,16,16,16,16,]),'NUMBER':([11,12,13,14,16,26,27,28,29,30,31,32,33,],[17,17,17,17,17,17,17,17,17,17,17,17,17,]),'STRING':([11,12,13,14,16,26,27,28,29,30,31,32,33,],[18,18,18,18,18,18,18,18,18,18,18,18,18,]),'CHAR':([11,12,13,14,16,26,27,28,29,30,31,32,33,],[19,19,19,19,19,19,19,19,19,19,19,19,19,]),'BOOLEAN':([11,12,13,14,16,26,27,28,29,30,31,32,33,],[20,20,20,20,20,20,20,20,20,20,20,20,20,]),'RPAREN':([15,17,18,19,20,21,23,24,34,37,39,40,41,42,43,44,45,46,],[25,-22,-23,-24,-25,-26,36,37,-20,-21,-12,-13,-14,-15,-16,-17,-18,-19,]),'PLUS':([15,17,18,19,20,21,22,23,24,34,37,39,40,41,42,43,44,45,46,],[26,-22,-23,-24,-25,-26,26,26,26,26,-21,-12,-13,-14,-15,26,26,26,26,]),'MINUS':([15,17,18,19,20,21,22,23,24,34,37,39,40,41,42,43,44,45,46,],[27,-22,-23,-24,-25,-26,27,27,27,27,-21,-12,-13,-14,-15,27,27,27,27,]),'TIMES':([15,17,18,19,20,21,22,23,24,34,37,39,40,41,42,43,44,45,46,],[28,-22,-23,-24,-25,-26,28,28,28,28,-21,28,28,-14,-15,28,28,28,28,]),'DIVIDE':([15,17,18,19,20,21,22,23,24,34,37,39,40,41,42,43,44,45,46,],[29,-22,-23,-24,-25,-26,29,29,29,29,-21,29,29,-14,-15,29,29,29,29,]),'LESS':([15,17,18,19,20,21,22,23,24,34,37,39,40,41,42,43,44,45,46,],[30,-22,-23,-24,-25,-26,30,30,30,30,-21,-12,-13,-14,-15,-16,-17,30,30,]),'GREATER':([15,17,18,19,20,21,22,23,24,34,37,39,40,41,42,43,44,45,46,],[31,-22,-23,-24,-25,-26,31,31,31,31,-21,-12,-13,-14,-15,-16,-17,31,31,]),'AND':([15,17,18,19,20,21,22,23,24,34,37,39,40,41,42,43,44,45,46,],[32,-22,-23,-24,-25,-26,32,32,32,-20,-21,-12,-13,-14,-15,-16,-17,-18,32,]),'OR':([15,17,18,19,20,21,22,23,24,34,37,39,40,41,42,43,44,45,46,],[33,-22,-23,-24,-25,-26,33,33,33,-20,-21,-12,-13,-14,-15,-16,-17,-18,-19,]),'SEMICOLON':([17,18,19,20,21,22,25,34,37,39,40,41,42,43,44,45,46,],[-22,-23,-24,-25,-26,35,38,-20,-21,-12,-13,-14,-15,-16,-17,-18,-19,]),'LBRACE':([36,49,],[48,48,]),'ELSE':([47,52,],[49,-11,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'program':([0,],[1,]),'statement_list':([0,47,],[2,49,]),'statement':([0,2,47,49,],[3,10,3,10,]),'print_statement':([0,2,47,49,],[4,4,4,4,]),'assign_statement':([0,2,47,49,],[5,5,5,5,]),'if_statement':([0,2,47,49,],[6,6,6,6,]),'expression':([11,12,13,14,16,25,26,27,28,29,30,31,32,],[15,21,22,23,33,38,39,40,41,42,43,44,45,]),'block':([35,48,],[46,50,]),}
+_lr_goto_items = {'program':([0,],[1,]),'statement_list':([0,48,],[2,50,]),'statement':([0,2,48,50,],[3,10,3,10,]),'print_statement':([0,2,48,50,],[4,4,4,4,]),'assign_statement':([0,2,48,50,],[5,5,5,5,]),'if_statement':([0,2,48,50,],[6,6,6,6,]),'expression':([11,12,13,14,16,26,27,28,29,30,31,32,33,],[15,22,23,24,34,39,40,41,42,43,44,45,46,]),'block':([36,49,],[47,51,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,29 +27,30 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> program","S'",1,None,None,None),
-  ('program -> statement_list','program',1,'p_program','parser.py',109),
-  ('statement_list -> statement_list statement','statement_list',2,'p_statement_list','parser.py',114),
-  ('statement_list -> statement','statement_list',1,'p_statement_list','parser.py',115),
-  ('statement -> print_statement','statement',1,'p_statement','parser.py',123),
-  ('statement -> assign_statement','statement',1,'p_statement','parser.py',124),
-  ('statement -> if_statement','statement',1,'p_statement','parser.py',125),
-  ('print_statement -> PRINT LPAREN expression RPAREN SEMICOLON','print_statement',5,'p_print_statement','parser.py',129),
-  ('assign_statement -> ID EQUALS expression SEMICOLON','assign_statement',4,'p_assign_statement','parser.py',133),
-  ('if_statement -> IF LPAREN expression RPAREN block','if_statement',5,'p_if_statement','parser.py',137),
-  ('if_statement -> IF LPAREN expression RPAREN block ELSE block','if_statement',7,'p_if_statement','parser.py',138),
-  ('block -> LBRACE statement_list RBRACE','block',3,'p_block','parser.py',145),
-  ('expression -> expression PLUS expression','expression',3,'p_expression_binop','parser.py',149),
-  ('expression -> expression MINUS expression','expression',3,'p_expression_binop','parser.py',150),
-  ('expression -> expression TIMES expression','expression',3,'p_expression_binop','parser.py',151),
-  ('expression -> expression DIVIDE expression','expression',3,'p_expression_binop','parser.py',152),
-  ('expression -> expression LESS expression','expression',3,'p_expression_binop','parser.py',153),
-  ('expression -> expression GREATER expression','expression',3,'p_expression_binop','parser.py',154),
-  ('expression -> expression AND expression','expression',3,'p_expression_binop','parser.py',155),
-  ('expression -> expression OR expression','expression',3,'p_expression_binop','parser.py',156),
-  ('expression -> NOT expression','expression',2,'p_expression_not','parser.py',160),
-  ('expression -> LPAREN expression RPAREN','expression',3,'p_expression_group','parser.py',164),
-  ('expression -> NUMBER','expression',1,'p_expression_number','parser.py',168),
-  ('expression -> STRING','expression',1,'p_expression_string','parser.py',172),
-  ('expression -> CHAR','expression',1,'p_expression_char','parser.py',176),
-  ('expression -> ID','expression',1,'p_expression_variable','parser.py',180),
+  ('program -> statement_list','program',1,'p_program','parser.py',116),
+  ('statement_list -> statement_list statement','statement_list',2,'p_statement_list','parser.py',121),
+  ('statement_list -> statement','statement_list',1,'p_statement_list','parser.py',122),
+  ('statement -> print_statement','statement',1,'p_statement','parser.py',130),
+  ('statement -> assign_statement','statement',1,'p_statement','parser.py',131),
+  ('statement -> if_statement','statement',1,'p_statement','parser.py',132),
+  ('print_statement -> PRINT LPAREN expression RPAREN SEMICOLON','print_statement',5,'p_print_statement','parser.py',136),
+  ('assign_statement -> ID EQUALS expression SEMICOLON','assign_statement',4,'p_assign_statement','parser.py',140),
+  ('if_statement -> IF LPAREN expression RPAREN block','if_statement',5,'p_if_statement','parser.py',144),
+  ('if_statement -> IF LPAREN expression RPAREN block ELSE block','if_statement',7,'p_if_statement','parser.py',145),
+  ('block -> LBRACE statement_list RBRACE','block',3,'p_block','parser.py',152),
+  ('expression -> expression PLUS expression','expression',3,'p_expression_binop','parser.py',156),
+  ('expression -> expression MINUS expression','expression',3,'p_expression_binop','parser.py',157),
+  ('expression -> expression TIMES expression','expression',3,'p_expression_binop','parser.py',158),
+  ('expression -> expression DIVIDE expression','expression',3,'p_expression_binop','parser.py',159),
+  ('expression -> expression LESS expression','expression',3,'p_expression_binop','parser.py',160),
+  ('expression -> expression GREATER expression','expression',3,'p_expression_binop','parser.py',161),
+  ('expression -> expression AND expression','expression',3,'p_expression_binop','parser.py',162),
+  ('expression -> expression OR expression','expression',3,'p_expression_binop','parser.py',163),
+  ('expression -> NOT expression','expression',2,'p_expression_not','parser.py',167),
+  ('expression -> LPAREN expression RPAREN','expression',3,'p_expression_group','parser.py',171),
+  ('expression -> NUMBER','expression',1,'p_expression_number','parser.py',175),
+  ('expression -> STRING','expression',1,'p_expression_string','parser.py',179),
+  ('expression -> CHAR','expression',1,'p_expression_char','parser.py',183),
+  ('expression -> BOOLEAN','expression',1,'p_expression_boolean','parser.py',187),
+  ('expression -> ID','expression',1,'p_expression_variable','parser.py',191),
 ]
