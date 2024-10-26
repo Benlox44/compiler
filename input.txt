@@ -1,6 +1,14 @@
-x = 10;
-y = 10;
+x = 2;
 
-if (x <= y) {
-    print("x es menor o igual que y");
+if (x > 1000) {
+    print(10);
+}
+else if (x > 20) {
+    print(20);
+}
+else if (x > 30) {
+    print(30);
+}
+else {
+    print(x);
 }

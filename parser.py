@@ -12,7 +12,7 @@ precedence = (
     ('left', 'LESS', 'GREATER', 'LEQ', 'GEQ'),
     ('left', 'PLUS', 'MINUS'),
     ('left', 'TIMES', 'DIVIDE'),
-    ('right', 'NOT'),  # Operador unario NOT
+    ('right', 'NOT'),  # Unary NOT operator
 )
 
 # AST node classes
@@ -145,13 +145,24 @@ def p_assign_statement(p):
     'assign_statement : ID EQUALS expression SEMICOLON'
     p[0] = Assign(p[1], p[3])
 
+# Corrected if-else if-else logic
 def p_if_statement(p):
-    '''if_statement : IF LPAREN expression RPAREN block
-                    | IF LPAREN expression RPAREN block ELSE block'''
-    if len(p) == 6:
-        p[0] = IfElse(p[3], p[5])
+    '''if_statement : IF LPAREN expression RPAREN block else_if_opt'''
+    p[0] = IfElse(p[3], p[5], p[6])
+
+def p_else_if_opt(p):
+    '''else_if_opt : ELSE IF LPAREN expression RPAREN block else_if_opt
+                   | ELSE block
+                   | empty'''
+    if len(p) == 8:
+        # Create an IfElse node for 'else if' chains
+        p[0] = IfElse(p[4], p[6], p[7])
+    elif len(p) == 3:
+        # Handle final 'else' block
+        p[0] = p[2]
     else:
-        p[0] = IfElse(p[3], p[5], p[7])
+        # No 'else if' or 'else' block
+        p[0] = None
 
 def p_block(p):
     'block : LBRACE statement_list RBRACE'
@@ -199,6 +210,10 @@ def p_expression_boolean(p):
 def p_expression_variable(p):
     'expression : ID'
     p[0] = Variable(p[1])
+
+def p_empty(p):
+    'empty :'
+    p[0] = None
 
 def p_error(p):
     if p:
