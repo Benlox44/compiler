@@ -1,14 +1,3 @@
-x = 2;
+x = 3.2;
 
-if (x > 1000) {
-    print(10);
-}
-else if (x > 20) {
-    print(20);
-}
-else if (x > 30) {
-    print(30);
-}
-else {
-    print(x);
-}
+print(x);

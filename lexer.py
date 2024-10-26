@@ -65,8 +65,11 @@ def t_ID(t):
 
 # Token for numbers
 def t_NUMBER(t):
-    r'\d+'
-    t.value = int(t.value)
+    r'\d+(\.\d+)?'
+    if '.' in t.value:
+        t.value = float(t.value)  # Convertir a float si tiene punto decimal
+    else:
+        t.value = int(t.value)  # Convertir a int si no tiene punto decimal
     return t
 
 def t_COMMENT(t):
