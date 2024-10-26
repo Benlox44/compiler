@@ -1,0 +1,18 @@
+# Byte-compiled / cached files
+__pycache__/
+*.py[cod]
+
+# Parser-generated files
+parsetab.py
+parser.out
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# VSCode settings (optional, if you're using VSCode)
+.vscode/
+
+# Python virtual environments (optional)
+venv/
+.env/
