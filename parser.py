@@ -1,22 +1,26 @@
 import ply.yacc as yacc
 from lexer import tokens
 
-# Runtime symbol table for variables
+# Tabla de variables en tiempo de ejecución
 variables = {}
 
-# Operator precedence
+# Precedencia de operadores
 precedence = (
     ('left', 'OR'),
     ('left', 'AND'),
     ('left', 'EQ', 'NEQ'),
     ('left', 'LESS', 'GREATER', 'LEQ', 'GEQ'),
     ('left', 'PLUS', 'MINUS'),
-    ('left', 'TIMES', 'DIVIDE'),
-    ('right', 'NOT'),  # Unary NOT operator
+    ('left', 'TIMES', 'DIVIDE', 'MODULO'),
+    ('right', 'NOT'),  # Operador unario NOT
 )
 
-# AST node classes
+# ========================
+# CLASES DEL AST (Árbol de Sintaxis Abstracta)
+# ========================
+
 class Number:
+    """Representa un número en el AST."""
     def __init__(self, value):
         self.value = value
 
@@ -24,6 +28,7 @@ class Number:
         return self.value
 
 class String:
+    """Representa una cadena en el AST."""
     def __init__(self, value):
         self.value = value
 
@@ -31,6 +36,7 @@ class String:
         return self.value
 
 class Char:
+    """Representa un carácter en el AST."""
     def __init__(self, value):
         self.value = value
 
@@ -38,6 +44,7 @@ class Char:
         return self.value
 
 class Boolean:
+    """Representa un valor booleano en el AST."""
     def __init__(self, value):
         self.value = value
 
@@ -45,6 +52,7 @@ class Boolean:
         return self.value
 
 class Variable:
+    """Representa una variable almacenada en la tabla de símbolos."""
     def __init__(self, name):
         self.name = name
 
@@ -52,29 +60,9 @@ class Variable:
         if self.name not in variables:
             raise ValueError(f"Undefined variable '{self.name}'")
         return variables[self.name]
-class WhileLoop:
-    def __init__(self, condition, block):
-        self.condition = condition
-        self.block = block
-
-    def execute(self):
-        while self.condition.evaluate():
-            self.block.execute()
-
-class ForLoop:
-    def __init__(self, init, condition, update, block):
-        self.init = init
-        self.condition = condition
-        self.update = update
-        self.block = block
-
-    def execute(self):
-        self.init.execute()
-        while self.condition.evaluate():
-            self.block.execute()
-            self.update.execute()
 
 class BinOp:
+    """Representa una operación binaria (+, -, *, etc.)."""
     def __init__(self, left, op, right):
         self.left = left
         self.op = op
@@ -88,6 +76,7 @@ class BinOp:
         if self.op == '-': return left_val - right_val
         if self.op == '*': return left_val * right_val
         if self.op == '/': return left_val / right_val
+        if self.op == '%': return left_val % right_val
         if self.op == '<': return left_val < right_val
         if self.op == '>': return left_val > right_val
         if self.op == '<=': return left_val <= right_val
@@ -98,6 +87,7 @@ class BinOp:
         if self.op == '||': return left_val or right_val
 
 class NotOp:
+    """Representa una operación unaria NOT."""
     def __init__(self, expression):
         self.expression = expression
 
@@ -105,6 +95,7 @@ class NotOp:
         return not self.expression.evaluate()
 
 class Assign:
+    """Representa una asignación a una variable."""
     def __init__(self, name, expression):
         self.name = name
         self.expression = expression
@@ -113,6 +104,7 @@ class Assign:
         variables[self.name] = self.expression.evaluate()
 
 class Print:
+    """Representa una instrucción de impresión."""
     def __init__(self, expression):
         self.expression = expression
 
@@ -120,6 +112,7 @@ class Print:
         print(self.expression.evaluate())
 
 class IfElse:
+    """Representa una instrucción condicional."""
     def __init__(self, condition, if_block, else_block=None):
         self.condition = condition
         self.if_block = if_block
@@ -132,6 +125,7 @@ class IfElse:
             self.else_block.execute()
 
 class Block:
+    """Representa un bloque de declaraciones."""
     def __init__(self, statements):
         self.statements = statements
 
@@ -139,7 +133,34 @@ class Block:
         for stmt in self.statements:
             stmt.execute()
 
-# Grammar rules
+class WhileLoop:
+    """Representa un bucle while."""
+    def __init__(self, condition, block):
+        self.condition = condition
+        self.block = block
+
+    def execute(self):
+        while self.condition.evaluate():
+            self.block.execute()
+
+class ForLoop:
+    """Representa un bucle for."""
+    def __init__(self, init, condition, update, block):
+        self.init = init
+        self.condition = condition
+        self.update = update
+        self.block = block
+
+    def execute(self):
+        self.init.execute()
+        while self.condition.evaluate():
+            self.block.execute()
+            self.update.execute()
+
+# ========================
+# REGLAS DE LA GRAMÁTICA
+# ========================
+
 def p_program(p):
     'program : statement_list'
     for statement in p[1]:
@@ -166,13 +187,13 @@ def p_print_statement(p):
     'print_statement : PRINT LPAREN expression RPAREN SEMICOLON'
     p[0] = Print(p[3])
 
-def p_assign_statement(p):
-    'assign_statement : ID EQUALS expression SEMICOLON'
-    p[0] = Assign(p[1], p[3])
-
 def p_assign_expression(p):
     'assign_expression : ID EQUALS expression'
     p[0] = Assign(p[1], p[3])
+
+def p_assign_statement(p):
+    'assign_statement : assign_expression SEMICOLON'
+    p[0] = p[1]
 
 def p_if_statement(p):
     '''if_statement : IF LPAREN expression RPAREN block else_if_opt'''
@@ -183,13 +204,10 @@ def p_else_if_opt(p):
                    | ELSE block
                    | empty'''
     if len(p) == 8:
-        # Create an IfElse node for 'else if' chains
         p[0] = IfElse(p[4], p[6], p[7])
     elif len(p) == 3:
-        # Handle final 'else' block
         p[0] = p[2]
     else:
-        # No 'else if' or 'else' block
         p[0] = None
 
 def p_while_statement(p):
@@ -209,6 +227,7 @@ def p_expression_binop(p):
                   | expression MINUS expression
                   | expression TIMES expression
                   | expression DIVIDE expression
+                  | expression MODULO expression
                   | expression LESS expression
                   | expression GREATER expression
                   | expression LEQ expression
@@ -257,5 +276,5 @@ def p_error(p):
     else:
         print("Syntax error: Unexpected end of input")
 
-# Build the parser
+# Construir el parser
 parser = yacc.yacc(start='program')

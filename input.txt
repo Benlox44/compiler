@@ -1,16 +1,2 @@
-// Inicialización de la variable
-x = 0;
-
-// Bucle for: Imprime los números del 0 al 4
-for (x = 0; x < 5; x = x + 1) {
-    print(x);
-}
-
-// Reestablecer la variable x a 0
-x = 0;
-
-// Bucle while: Imprime los números del 0 al 4
-while (x < 5) {
-    print(x);
-    x = x + 1;
-}
+x = 5 % 1;
+print(x);
