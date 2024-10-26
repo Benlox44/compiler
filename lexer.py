@@ -4,7 +4,9 @@ import ply.lex as lex
 reserved = {
     'print': 'PRINT',
     'if': 'IF',
-    'else': 'ELSE'
+    'else': 'ELSE',
+    'for': 'FOR',
+    'while': 'WHILE'
 }
 
 # List of tokens

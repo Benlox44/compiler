@@ -49,7 +49,30 @@ class Variable:
         self.name = name
 
     def evaluate(self):
-        return variables.get(self.name, f"Undefined variable '{self.name}'")
+        if self.name not in variables:
+            raise ValueError(f"Undefined variable '{self.name}'")
+        return variables[self.name]
+class WhileLoop:
+    def __init__(self, condition, block):
+        self.condition = condition
+        self.block = block
+
+    def execute(self):
+        while self.condition.evaluate():
+            self.block.execute()
+
+class ForLoop:
+    def __init__(self, init, condition, update, block):
+        self.init = init
+        self.condition = condition
+        self.update = update
+        self.block = block
+
+    def execute(self):
+        self.init.execute()
+        while self.condition.evaluate():
+            self.block.execute()
+            self.update.execute()
 
 class BinOp:
     def __init__(self, left, op, right):
@@ -134,7 +157,9 @@ def p_statement_list(p):
 def p_statement(p):
     '''statement : print_statement
                  | assign_statement
-                 | if_statement'''
+                 | if_statement
+                 | for_statement
+                 | while_statement'''
     p[0] = p[1]
 
 def p_print_statement(p):
@@ -145,7 +170,10 @@ def p_assign_statement(p):
     'assign_statement : ID EQUALS expression SEMICOLON'
     p[0] = Assign(p[1], p[3])
 
-# Corrected if-else if-else logic
+def p_assign_expression(p):
+    'assign_expression : ID EQUALS expression'
+    p[0] = Assign(p[1], p[3])
+
 def p_if_statement(p):
     '''if_statement : IF LPAREN expression RPAREN block else_if_opt'''
     p[0] = IfElse(p[3], p[5], p[6])
@@ -163,6 +191,14 @@ def p_else_if_opt(p):
     else:
         # No 'else if' or 'else' block
         p[0] = None
+
+def p_while_statement(p):
+    'while_statement : WHILE LPAREN expression RPAREN block'
+    p[0] = WhileLoop(p[3], p[5])
+
+def p_for_statement(p):
+    '''for_statement : FOR LPAREN assign_expression SEMICOLON expression SEMICOLON assign_expression RPAREN block'''
+    p[0] = ForLoop(p[3], p[5], p[7], p[9])
 
 def p_block(p):
     'block : LBRACE statement_list RBRACE'
