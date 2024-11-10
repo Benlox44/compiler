@@ -6,7 +6,9 @@ reserved = {
     'if': 'IF',
     'else': 'ELSE',
     'for': 'FOR',
-    'while': 'WHILE'
+    'while': 'WHILE',
+    'func': 'FUNC',
+    'return': 'RETURN'
 }
 
 # List of tokens
@@ -14,9 +16,8 @@ tokens = [
     'NUMBER', 'ID', 'EQUALS', 'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'MODULO',
     'LPAREN', 'RPAREN', 'STRING', 'CHAR', 'SEMICOLON', 'LESS', 'GREATER',
     'LEQ', 'GEQ', 'LBRACE', 'RBRACE', 'AND', 'OR', 'NOT', 'BOOLEAN',
-    'EQ', 'NEQ'
+    'EQ', 'NEQ', 'COMMA'
 ] + list(reserved.values())
-
 
 # Regular expression rules for tokens
 t_EQ = r'=='
@@ -39,6 +40,7 @@ t_RBRACE = r'\}'
 t_AND = r'&&'
 t_OR = r'\|\|'
 t_NOT = r'!'
+t_COMMA = r','
 
 # Ignore spaces and tabs
 t_ignore = ' \t'

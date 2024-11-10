@@ -3,6 +3,7 @@ from lexer import tokens
 
 # Tabla de variables en tiempo de ejecución
 variables = {}
+functions = {}
 
 # Precedencia de operadores
 precedence = (
@@ -20,7 +21,6 @@ precedence = (
 # ========================
 
 class Number:
-    """Representa un número en el AST."""
     def __init__(self, value):
         self.value = value
 
@@ -28,7 +28,6 @@ class Number:
         return self.value
 
 class String:
-    """Representa una cadena en el AST."""
     def __init__(self, value):
         self.value = value
 
@@ -36,7 +35,6 @@ class String:
         return self.value
 
 class Char:
-    """Representa un carácter en el AST."""
     def __init__(self, value):
         self.value = value
 
@@ -44,7 +42,6 @@ class Char:
         return self.value
 
 class Boolean:
-    """Representa un valor booleano en el AST."""
     def __init__(self, value):
         self.value = value
 
@@ -52,7 +49,6 @@ class Boolean:
         return self.value
 
 class Variable:
-    """Representa una variable almacenada en la tabla de símbolos."""
     def __init__(self, name):
         self.name = name
 
@@ -62,7 +58,6 @@ class Variable:
         return variables[self.name]
 
 class BinOp:
-    """Representa una operación binaria (+, -, *, etc.)."""
     def __init__(self, left, op, right):
         self.left = left
         self.op = op
@@ -87,7 +82,6 @@ class BinOp:
         if self.op == '||': return left_val or right_val
 
 class NotOp:
-    """Representa una operación unaria NOT."""
     def __init__(self, expression):
         self.expression = expression
 
@@ -95,7 +89,6 @@ class NotOp:
         return not self.expression.evaluate()
 
 class Assign:
-    """Representa una asignación a una variable."""
     def __init__(self, name, expression):
         self.name = name
         self.expression = expression
@@ -104,7 +97,6 @@ class Assign:
         variables[self.name] = self.expression.evaluate()
 
 class Print:
-    """Representa una instrucción de impresión."""
     def __init__(self, expression):
         self.expression = expression
 
@@ -112,7 +104,6 @@ class Print:
         print(self.expression.evaluate())
 
 class IfElse:
-    """Representa una instrucción condicional."""
     def __init__(self, condition, if_block, else_block=None):
         self.condition = condition
         self.if_block = if_block
@@ -120,21 +111,22 @@ class IfElse:
 
     def execute(self):
         if self.condition.evaluate():
-            self.if_block.execute()
+            return self.if_block.execute()
         elif self.else_block:
-            self.else_block.execute()
+            return self.else_block.execute()
 
 class Block:
-    """Representa un bloque de declaraciones."""
     def __init__(self, statements):
         self.statements = statements
 
     def execute(self):
         for stmt in self.statements:
-            stmt.execute()
+            result = stmt.execute()
+            if isinstance(result, Return):
+                return result
+        return None
 
 class WhileLoop:
-    """Representa un bucle while."""
     def __init__(self, condition, block):
         self.condition = condition
         self.block = block
@@ -144,7 +136,6 @@ class WhileLoop:
             self.block.execute()
 
 class ForLoop:
-    """Representa un bucle for."""
     def __init__(self, init, condition, update, block):
         self.init = init
         self.condition = condition
@@ -157,20 +148,63 @@ class ForLoop:
             self.block.execute()
             self.update.execute()
 
+# Clases para funciones
+class Function:
+    def __init__(self, name, parameters, block):
+        self.name = name
+        self.parameters = parameters
+        self.block = block
+
+    def execute(self, args):
+        prev_variables = variables.copy()
+        for param, arg in zip(self.parameters, args):
+            variables[param] = arg.evaluate()
+
+        result = self.block.execute()
+        if isinstance(result, Return):
+            result = result.evaluate()
+
+        variables.update(prev_variables)
+        return result
+
+class FunctionCall:
+    def __init__(self, name, arguments):
+        self.name = name
+        self.arguments = arguments
+
+    def evaluate(self):
+        func = functions.get(self.name)
+        if not func:
+            raise ValueError(f"Undefined function '{self.name}'")
+        return func.execute(self.arguments)
+
+class Return:
+    def __init__(self, expression):
+        self.expression = expression
+
+    def evaluate(self):
+        result = self.expression.evaluate()
+        return result
+    
+    def execute(self):
+        return self
+
 # ========================
 # REGLAS DE LA GRAMÁTICA
 # ========================
 
 def p_program(p):
     'program : statement_list'
-    for statement in p[1]:
+    statements = [stmt for stmt in p[1] if stmt is not None]
+    for statement in statements:
         statement.execute()
 
 def p_statement_list(p):
     '''statement_list : statement_list statement
                       | statement'''
     if len(p) == 3:
-        p[1].append(p[2])
+        if p[2] is not None:
+            p[1].append(p[2])
         p[0] = p[1]
     else:
         p[0] = [p[1]]
@@ -180,7 +214,9 @@ def p_statement(p):
                  | assign_statement
                  | if_statement
                  | for_statement
-                 | while_statement'''
+                 | while_statement
+                 | function_definition
+                 | return_statement'''
     p[0] = p[1]
 
 def p_print_statement(p):
@@ -221,6 +257,37 @@ def p_for_statement(p):
 def p_block(p):
     'block : LBRACE statement_list RBRACE'
     p[0] = Block(p[2])
+
+def p_function_definition(p):
+    'function_definition : FUNC ID LPAREN parameters RPAREN block'
+    functions[p[2]] = Function(p[2], p[4], p[6])
+    p[0] = None
+
+def p_parameters(p):
+    '''parameters : ID
+                  | parameters COMMA ID
+                  | empty'''
+    if len(p) == 2:
+        p[0] = [] if p[1] is None else [p[1]]
+    else:
+        p[0] = p[1] + [p[3]]
+
+def p_function_call(p):
+    'expression : ID LPAREN arguments RPAREN'
+    p[0] = FunctionCall(p[1], p[3])
+
+def p_arguments(p):
+    '''arguments : expression
+                 | arguments COMMA expression
+                 | empty'''
+    if len(p) == 2:
+        p[0] = [] if p[1] is None else [p[1]]
+    else:
+        p[0] = p[1] + [p[3]]
+
+def p_return_statement(p):
+    'return_statement : RETURN expression SEMICOLON'
+    p[0] = Return(p[2])
 
 def p_expression_binop(p):
     '''expression : expression PLUS expression
