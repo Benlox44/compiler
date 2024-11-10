@@ -13,7 +13,8 @@ precedence = (
     ('left', 'LESS', 'GREATER', 'LEQ', 'GEQ'),
     ('left', 'PLUS', 'MINUS'),
     ('left', 'TIMES', 'DIVIDE', 'MODULO'),
-    ('right', 'NOT'),  # Operador unario NOT
+    ('right', 'NOT'),
+    ('right', 'MINUS'),
 )
 
 # ========================
@@ -316,6 +317,10 @@ def p_expression_group(p):
 def p_expression_number(p):
     'expression : NUMBER'
     p[0] = Number(p[1])
+
+def p_expression_negative(p):
+    'expression : MINUS expression %prec MINUS'
+    p[0] = BinOp(Number(0), '-', p[2])
 
 def p_expression_string(p):
     'expression : STRING'

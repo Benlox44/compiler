@@ -1,33 +1,16 @@
-func evaluarParidad(n) {
-    if (n % 2 == 0) {
-        print("El número es par");
-        return true;
+func verificarSigno(n) {
+    if (n < 0) {
+        print("El número es negativo");
+        return -1;
+    } else if (n > 0) {
+        print("El número es positivo");
+        return 1;
     } else {
-        print("El número es impar");
-        return false;
+        print("El número es cero");
+        return 0;
     }
 }
 
-func verificarEdad(edad) {
-    if (edad < 13) {
-        print("Es un niño");
-        return "niño";
-    } else if (edad < 20) {
-        print("Es un adolescente");
-        return "adolescente";
-    } else if (edad < 65) {
-        print("Es un adulto");
-        return "adulto";
-    } else {
-        print("Es un anciano");
-        return "anciano";
-    }
-}
-
-print(evaluarParidad(4));
-print(evaluarParidad(7));
-
-print(verificarEdad(10));
-print(verificarEdad(16));
-print(verificarEdad(30));
-print(verificarEdad(70));
+print(verificarSigno(-5));
+print(verificarSigno(3));
+print(verificarSigno(0));
