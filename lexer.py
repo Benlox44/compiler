@@ -16,8 +16,9 @@ tokens = [
     'NUMBER', 'ID', 'EQUALS', 'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'MODULO',
     'LPAREN', 'RPAREN', 'STRING', 'CHAR', 'SEMICOLON', 'LESS', 'GREATER',
     'LEQ', 'GEQ', 'LBRACE', 'RBRACE', 'AND', 'OR', 'NOT', 'BOOLEAN',
-    'EQ', 'NEQ', 'COMMA'
+    'EQ', 'NEQ', 'COMMA', 'LBRACKET', 'RBRACKET'
 ] + list(reserved.values())
+
 
 # Regular expression rules for tokens
 t_EQ = r'=='
@@ -41,6 +42,9 @@ t_AND = r'&&'
 t_OR = r'\|\|'
 t_NOT = r'!'
 t_COMMA = r','
+t_LBRACKET = r'\['
+t_RBRACKET = r'\]'
+
 
 # Ignore spaces and tabs
 t_ignore = ' \t'
@@ -94,3 +98,13 @@ def t_error(t):
 
 # Build the lexer
 lexer = lex.lex()
+
+if __name__ == "__main__":
+    # Prueba de tokenización
+    with open('input.txt', 'r', encoding='utf-8') as file:
+        lexer.input(file.read())
+        while True:
+            tok = lexer.token()
+            if not tok:
+                break
+            print(tok)

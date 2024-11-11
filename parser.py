@@ -14,8 +14,10 @@ precedence = (
     ('left', 'PLUS', 'MINUS'),
     ('left', 'TIMES', 'DIVIDE', 'MODULO'),
     ('right', 'NOT'),
-    ('right', 'MINUS'),
+    ('right', 'MINUS'),  # Es posible que aquí esté la duplicación
 )
+
+
 
 # ========================
 # CLASES DEL AST (Árbol de Sintaxis Abstracta)
@@ -28,12 +30,14 @@ class Number:
     def evaluate(self):
         return self.value
 
+
 class String:
     def __init__(self, value):
         self.value = value
 
     def evaluate(self):
         return self.value
+
 
 class Char:
     def __init__(self, value):
@@ -42,12 +46,14 @@ class Char:
     def evaluate(self):
         return self.value
 
+
 class Boolean:
     def __init__(self, value):
         self.value = value
 
     def evaluate(self):
         return self.value
+
 
 class Variable:
     def __init__(self, name):
@@ -58,6 +64,7 @@ class Variable:
             raise ValueError(f"Undefined variable '{self.name}'")
         return variables[self.name]
 
+
 class BinOp:
     def __init__(self, left, op, right):
         self.left = left
@@ -67,7 +74,8 @@ class BinOp:
     def evaluate(self):
         left_val = self.left.evaluate()
         right_val = self.right.evaluate()
-
+        
+        # Define las operaciones binarias
         if self.op == '+': return left_val + right_val
         if self.op == '-': return left_val - right_val
         if self.op == '*': return left_val * right_val
@@ -81,6 +89,7 @@ class BinOp:
         if self.op == '!=': return left_val != right_val
         if self.op == '&&': return left_val and right_val
         if self.op == '||': return left_val or right_val
+
 
 class NotOp:
     def __init__(self, expression):
@@ -97,12 +106,16 @@ class Assign:
     def execute(self):
         variables[self.name] = self.expression.evaluate()
 
+
 class Print:
-    def __init__(self, expression):
-        self.expression = expression
+    def __init__(self, expressions):
+        self.expressions = expressions
 
     def execute(self):
-        print(self.expression.evaluate())
+        values = [expr.evaluate() for expr in self.expressions]
+        print(*values)
+
+
 
 class IfElse:
     def __init__(self, condition, if_block, else_block=None):
@@ -179,6 +192,33 @@ class FunctionCall:
             raise ValueError(f"Undefined function '{self.name}'")
         return func.execute(self.arguments)
 
+    def execute(self):
+        return self.evaluate()
+    
+class List:
+    def __init__(self, elements):
+        self.elements = elements
+
+    def evaluate(self):
+        return [element.evaluate() for element in self.elements]
+
+    def get_item(self, index):
+        return self.elements[index].evaluate()
+    
+class ListAccess:
+    def __init__(self, list_expr, index_expr):
+        self.list_expr = list_expr
+        self.index_expr = index_expr
+
+    def evaluate(self):
+        list_value = self.list_expr.evaluate()
+        index_value = self.index_expr.evaluate()
+        return list_value[index_value]
+
+
+
+
+
 class Return:
     def __init__(self, expression):
         self.expression = expression
@@ -217,12 +257,23 @@ def p_statement(p):
                  | for_statement
                  | while_statement
                  | function_definition
-                 | return_statement'''
+                 | return_statement
+                 | expression SEMICOLON'''
     p[0] = p[1]
 
+
 def p_print_statement(p):
-    'print_statement : PRINT LPAREN expression RPAREN SEMICOLON'
+    'print_statement : PRINT LPAREN print_arguments RPAREN SEMICOLON'
     p[0] = Print(p[3])
+
+def p_print_arguments_multiple(p):
+    'print_arguments : print_arguments COMMA expression'
+    p[0] = p[1] + [p[3]]
+
+def p_print_arguments_single(p):
+    'print_arguments : expression'
+    p[0] = [p[1]]
+
 
 def p_assign_expression(p):
     'assign_expression : ID EQUALS expression'
@@ -337,6 +388,25 @@ def p_expression_boolean(p):
 def p_expression_variable(p):
     'expression : ID'
     p[0] = Variable(p[1])
+
+def p_expression_list(p):
+    'expression : LBRACKET elements RBRACKET'
+    p[0] = List(p[2])
+
+def p_expression_list_access(p):
+    'expression : expression LBRACKET expression RBRACKET'
+    p[0] = ListAccess(p[1], p[3])
+
+
+def p_elements_multiple(p):
+    'elements : elements COMMA expression'
+    p[0] = p[1] + [p[3]]
+
+def p_elements_single(p):
+    'elements : expression'
+    p[0] = [p[1]]
+
+
 
 def p_empty(p):
     'empty :'
