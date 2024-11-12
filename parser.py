@@ -17,8 +17,6 @@ precedence = (
     ('right', 'MINUS'),  # Es posible que aquí esté la duplicación
 )
 
-
-
 # ========================
 # CLASES DEL AST (Árbol de Sintaxis Abstracta)
 # ========================
@@ -30,14 +28,12 @@ class Number:
     def evaluate(self):
         return self.value
 
-
 class String:
     def __init__(self, value):
         self.value = value
 
     def evaluate(self):
         return self.value
-
 
 class Char:
     def __init__(self, value):
@@ -46,14 +42,12 @@ class Char:
     def evaluate(self):
         return self.value
 
-
 class Boolean:
     def __init__(self, value):
         self.value = value
 
     def evaluate(self):
         return self.value
-
 
 class Variable:
     def __init__(self, name):
@@ -63,7 +57,6 @@ class Variable:
         if self.name not in variables:
             raise ValueError(f"Undefined variable '{self.name}'")
         return variables[self.name]
-
 
 class BinOp:
     def __init__(self, left, op, right):
@@ -90,7 +83,6 @@ class BinOp:
         if self.op == '&&': return left_val and right_val
         if self.op == '||': return left_val or right_val
 
-
 class NotOp:
     def __init__(self, expression):
         self.expression = expression
@@ -106,7 +98,6 @@ class Assign:
     def execute(self):
         variables[self.name] = self.expression.evaluate()
 
-
 class Print:
     def __init__(self, expressions):
         self.expressions = expressions
@@ -114,8 +105,6 @@ class Print:
     def execute(self):
         values = [expr.evaluate() for expr in self.expressions]
         print(*values)
-
-
 
 class IfElse:
     def __init__(self, condition, if_block, else_block=None):
@@ -187,14 +176,23 @@ class FunctionCall:
         self.arguments = arguments
 
     def evaluate(self):
-        func = functions.get(self.name)
-        if not func:
-            raise ValueError(f"Undefined function '{self.name}'")
-        return func.execute(self.arguments)
+        if self.name == 'input':
+            if len(self.arguments) == 0:
+                return input()
+            elif len(self.arguments) == 1:
+                prompt = self.arguments[0].evaluate()
+                return input(str(prompt))
+            else:
+                raise SyntaxError("La función 'input' acepta como máximo un argumento.")
+        else:
+            func = functions.get(self.name)
+            if not func:
+                raise ValueError(f"Undefined function '{self.name}'")
+            return func.execute(self.arguments)
 
     def execute(self):
         return self.evaluate()
-    
+
 class List:
     def __init__(self, elements):
         self.elements = elements
@@ -204,7 +202,7 @@ class List:
 
     def get_item(self, index):
         return self.elements[index].evaluate()
-    
+
 class ListAccess:
     def __init__(self, list_expr, index_expr):
         self.list_expr = list_expr
@@ -214,10 +212,6 @@ class ListAccess:
         list_value = self.list_expr.evaluate()
         index_value = self.index_expr.evaluate()
         return list_value[index_value]
-
-
-
-
 
 class Return:
     def __init__(self, expression):
@@ -229,6 +223,41 @@ class Return:
     
     def execute(self):
         return self
+
+# Nueva clase para declaraciones de expresiones
+class ExpressionStatement:
+    def __init__(self, expression):
+        self.expression = expression
+
+    def execute(self):
+        self.expression.evaluate()
+
+# Nueva clase Input para manejar la función input()
+class Input:
+    def __init__(self, prompt=None):
+        self.prompt = prompt
+
+    def evaluate(self):
+        if self.prompt:
+            prompt_value = self.prompt.evaluate()
+            user_input = input(str(prompt_value))
+        else:
+            user_input = input()
+        
+        # Intentar convertir la entrada a entero
+        try:
+            return int(user_input)
+        except ValueError:
+            pass  # No es entero, intentar flotante
+        
+        # Intentar convertir la entrada a flotante
+        try:
+            return float(user_input)
+        except ValueError:
+            pass  # No es flotante, devolver cadena original
+        
+        # Devolver la cadena original si no es número
+        return user_input
 
 # ========================
 # REGLAS DE LA GRAMÁTICA
@@ -259,8 +288,10 @@ def p_statement(p):
                  | function_definition
                  | return_statement
                  | expression SEMICOLON'''
-    p[0] = p[1]
-
+    if len(p) == 3:
+        p[0] = ExpressionStatement(p[1])
+    else:
+        p[0] = p[1]
 
 def p_print_statement(p):
     'print_statement : PRINT LPAREN print_arguments RPAREN SEMICOLON'
@@ -273,7 +304,6 @@ def p_print_arguments_multiple(p):
 def p_print_arguments_single(p):
     'print_arguments : expression'
     p[0] = [p[1]]
-
 
 def p_assign_expression(p):
     'assign_expression : ID EQUALS expression'
@@ -321,12 +351,23 @@ def p_parameters(p):
                   | empty'''
     if len(p) == 2:
         p[0] = [] if p[1] is None else [p[1]]
-    else:
+    elif len(p) == 4:
         p[0] = p[1] + [p[3]]
+    else:
+        p[0] = []
 
 def p_function_call(p):
-    'expression : ID LPAREN arguments RPAREN'
-    p[0] = FunctionCall(p[1], p[3])
+    '''expression : ID LPAREN arguments RPAREN
+                  | INPUT LPAREN arguments RPAREN'''
+    if p.slice[1].type == 'INPUT':
+        if len(p[3]) == 0:
+            p[0] = Input()
+        elif len(p[3]) == 1:
+            p[0] = Input(p[3][0])
+        else:
+            raise SyntaxError("La función 'input' acepta como máximo un argumento.")
+    else:
+        p[0] = FunctionCall(p[1], p[3])
 
 def p_arguments(p):
     '''arguments : expression
@@ -334,8 +375,10 @@ def p_arguments(p):
                  | empty'''
     if len(p) == 2:
         p[0] = [] if p[1] is None else [p[1]]
-    else:
+    elif len(p) == 4:
         p[0] = p[1] + [p[3]]
+    else:
+        p[0] = []
 
 def p_return_statement(p):
     'return_statement : RETURN expression SEMICOLON'
@@ -397,7 +440,6 @@ def p_expression_list_access(p):
     'expression : expression LBRACKET expression RBRACKET'
     p[0] = ListAccess(p[1], p[3])
 
-
 def p_elements_multiple(p):
     'elements : elements COMMA expression'
     p[0] = p[1] + [p[3]]
@@ -405,8 +447,6 @@ def p_elements_multiple(p):
 def p_elements_single(p):
     'elements : expression'
     p[0] = [p[1]]
-
-
 
 def p_empty(p):
     'empty :'

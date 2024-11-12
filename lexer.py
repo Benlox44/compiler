@@ -1,8 +1,9 @@
 import ply.lex as lex
 
-# Reserved words (sin 'true' y 'false')
+# Palabras reservadas (incluyendo 'input')
 reserved = {
     'print': 'PRINT',
+    'input': 'INPUT',  # Aseguramos que 'input' está en las palabras reservadas
     'if': 'IF',
     'else': 'ELSE',
     'for': 'FOR',
@@ -11,7 +12,7 @@ reserved = {
     'return': 'RETURN'
 }
 
-# List of tokens
+# Lista de tokens
 tokens = [
     'NUMBER', 'ID', 'EQUALS', 'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'MODULO',
     'LPAREN', 'RPAREN', 'STRING', 'CHAR', 'SEMICOLON', 'LESS', 'GREATER',
@@ -19,8 +20,7 @@ tokens = [
     'EQ', 'NEQ', 'COMMA', 'LBRACKET', 'RBRACKET'
 ] + list(reserved.values())
 
-
-# Regular expression rules for tokens
+# Reglas de expresiones regulares para tokens simples
 t_EQ = r'=='
 t_NEQ = r'!='
 t_LEQ = r'<='
@@ -45,58 +45,59 @@ t_COMMA = r','
 t_LBRACKET = r'\['
 t_RBRACKET = r'\]'
 
-
-# Ignore spaces and tabs
+# Ignorar espacios y tabs
 t_ignore = ' \t'
 
-# Token for strings (double quotes)
+# Token para cadenas de caracteres (comillas dobles)
 def t_STRING(t):
     r'\"([^\\\n]|(\\.))*?\"'
-    t.value = t.value[1:-1]
+    t.value = t.value[1:-1]  # Remover las comillas
     return t
 
-# Token for character literals (single quotes)
+# Token para caracteres individuales (comillas simples)
 def t_CHAR(t):
     r"\'([^\\\n]|(\\.))\'"
-    t.value = t.value[1:-1]
+    t.value = t.value[1:-1]  # Remover las comillas
     return t
 
-# Token for booleans (true/false)
+# Token para booleanos (true/false)
 def t_BOOLEAN(t):
-    r'true|false'
+    r'\btrue\b|\bfalse\b'
     t.value = True if t.value == 'true' else False
     return t
 
-# Token for identifiers (variables)
+# Token para identificadores (variables y palabras reservadas)
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*'
+    # Verificar si es una palabra reservada
     t.type = reserved.get(t.value, 'ID')
     return t
 
-# Token for numbers
+# Token para números (enteros y flotantes)
 def t_NUMBER(t):
     r'\d+(\.\d+)?'
     if '.' in t.value:
-        t.value = float(t.value)  # Convertir a float si tiene punto decimal
+        t.value = float(t.value)
     else:
-        t.value = int(t.value)  # Convertir a int si no tiene punto decimal
+        t.value = int(t.value)
     return t
 
+# Token para comentarios (líneas que comienzan con //)
 def t_COMMENT(t):
     r'//.*'
     pass  # Ignorar los comentarios
 
-# Track line numbers
+# Contador de líneas
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
 
-# Handle errors
+# Manejo de errores
 def t_error(t):
-    print(f"Illegal character '{t.value[0]}' at line {t.lexer.lineno}")
+    print(f"Caracter ilegal '{t.value[0]}' en la línea {t.lexer.lineno}")
     t.lexer.skip(1)
 
-# Build the lexer
+# Construir el lexer
 lexer = lex.lex()
 
 if __name__ == "__main__":

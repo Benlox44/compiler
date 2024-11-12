@@ -1,20 +1,17 @@
-x = 10;
-y = 5;
 
 func multiply(a, b) {
     return a * b;
 }
 
-if (x > y) {
-    print("x is greater than y");
-} else {
-    print("y is greater than or equal to x");
-}
 
+x = input("Ingrese un numero: ");
+y = 5;
 result = multiply(x, y);
-print("Result of multiplication:", result); // Esperado: Result of multiplication: 50
+print("Result of multiplication:", result);
+
+anashei=["nnnn","mmmmm","anashei"];
 
 for (i = 0; i < 3; i = i + 1) {
-    print("Loop iteration:", i);
+    print(anashei[i] );
 }
 // Esperado: Iteraciones del bucle de 0 a 2
