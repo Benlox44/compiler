@@ -1,17 +1,20 @@
-
-func multiply(a, b) {
-    return a * b;
-}
-
-
-x = input("Ingrese un numero: ");
-y = 5;
-result = multiply(x, y);
-print("Result of multiplication:", result);
-
-anashei=["nnnn","mmmmm","anashei"];
-
-for (i = 0; i < 3; i = i + 1) {
-    print(anashei[i] );
-}
-// Esperado: Iteraciones del bucle de 0 a 2
+miLista = [1, 2, 3];
+append(miLista, 4);
+print("Después de append:", miLista); // [1, 2, 3, 4]
+remove(miLista, 2);
+print("Después de remove:", miLista); // [1, 3, 4]
+insert(miLista, 1, 5);
+print("Después de insert:", miLista); // [1, 5, 3, 4]
+elemento = pop(miLista);
+print("Elemento pop:", elemento); // 4
+print("Después de pop:", miLista); // [1, 5, 3]
+clear(miLista);
+print("Después de clear:", miLista); // []
+append(miLista, 10);
+append(miLista, 20);
+append(miLista, 30);
+print("Lista antes de pop con índice:", miLista); // [10, 20, 30]
+elemento2 = pop(miLista, 1);
+print("Elemento pop en índice 1:", elemento2); // 20
+print("Lista después de pop con índice:", miLista); // [10, 30]
+print(length(miLista));

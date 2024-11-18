@@ -3,7 +3,7 @@ import ply.lex as lex
 # Palabras reservadas (incluyendo 'input')
 reserved = {
     'print': 'PRINT',
-    'input': 'INPUT',  # Aseguramos que 'input' está en las palabras reservadas
+    'input': 'INPUT',  
     'if': 'IF',
     'else': 'ELSE',
     'for': 'FOR',

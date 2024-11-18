@@ -1,7 +1,7 @@
 import ply.yacc as yacc
 from lexer import tokens
 
-# Tabla de variables en tiempo de ejecución
+# Tabla de variables y funciones en tiempo de ejecución
 variables = {}
 functions = {}
 
@@ -14,7 +14,7 @@ precedence = (
     ('left', 'PLUS', 'MINUS'),
     ('left', 'TIMES', 'DIVIDE', 'MODULO'),
     ('right', 'NOT'),
-    ('right', 'MINUS'),  # Es posible que aquí esté la duplicación
+    ('right', 'UMINUS'),
 )
 
 # ========================
@@ -82,6 +82,7 @@ class BinOp:
         if self.op == '!=': return left_val != right_val
         if self.op == '&&': return left_val and right_val
         if self.op == '||': return left_val or right_val
+        raise ValueError(f"Operador desconocido '{self.op}'")
 
 class NotOp:
     def __init__(self, expression):
@@ -91,12 +92,27 @@ class NotOp:
         return not self.expression.evaluate()
 
 class Assign:
-    def __init__(self, name, expression):
-        self.name = name
+    def __init__(self, target, expression):
+        self.target = target
         self.expression = expression
 
     def execute(self):
-        variables[self.name] = self.expression.evaluate()
+        value = self.expression.evaluate()
+        if isinstance(self.target, Variable):
+            variables[self.target.name] = value
+        elif isinstance(self.target, ListAccess):
+            list_obj = self.target.list_expr.evaluate()
+            index = self.target.index_expr.evaluate()
+            if isinstance(list_obj, list):
+                if index < 0:
+                    raise IndexError("Índice negativo no permitido")
+                if index >= len(list_obj):
+                    list_obj.extend([None] * (index - len(list_obj) + 1))
+                list_obj[index] = value
+            else:
+                raise TypeError("El objeto no es una lista")
+        else:
+            raise ValueError("Invalid assignment target")
 
 class Print:
     def __init__(self, expressions):
@@ -153,22 +169,29 @@ class ForLoop:
 
 # Clases para funciones
 class Function:
-    def __init__(self, name, parameters, block):
+    def __init__(self, name, parameters, block, builtin=False):
         self.name = name
         self.parameters = parameters
         self.block = block
+        self.builtin = builtin
 
     def execute(self, args):
-        prev_variables = variables.copy()
-        for param, arg in zip(self.parameters, args):
-            variables[param] = arg.evaluate()
+        if self.builtin:
+            return self.block(args)
+        else:
+            prev_variables = variables.copy()
+            variables.clear()
+            variables.update(prev_variables)
+            for param, arg in zip(self.parameters, args):
+                variables[param] = arg
 
-        result = self.block.execute()
-        if isinstance(result, Return):
-            result = result.evaluate()
+            result = self.block.execute()
+            if isinstance(result, Return):
+                result = result.evaluate()
 
-        variables.update(prev_variables)
-        return result
+            variables.clear()
+            variables.update(prev_variables)
+            return result
 
 class FunctionCall:
     def __init__(self, name, arguments):
@@ -184,24 +207,28 @@ class FunctionCall:
                 return input(str(prompt))
             else:
                 raise SyntaxError("La función 'input' acepta como máximo un argumento.")
+        elif self.name in functions:
+            func = functions[self.name]
+            args = [arg.evaluate() for arg in self.arguments]
+            return func.execute(args)
         else:
-            func = functions.get(self.name)
-            if not func:
-                raise ValueError(f"Undefined function '{self.name}'")
-            return func.execute(self.arguments)
+            raise ValueError(f"Undefined function '{self.name}'")
 
     def execute(self):
         return self.evaluate()
 
 class List:
     def __init__(self, elements):
-        self.elements = elements
+        self.elements = [element.evaluate() for element in elements]
 
     def evaluate(self):
-        return [element.evaluate() for element in self.elements]
+        return self.elements  # Devolver la lista de elementos
 
-    def get_item(self, index):
-        return self.elements[index].evaluate()
+    def length(self):
+        return len(self.elements)
+
+    # Los métodos get_item y set_item ya no son necesarios aquí
+    # porque trabajamos directamente con listas de Python
 
 class ListAccess:
     def __init__(self, list_expr, index_expr):
@@ -211,7 +238,13 @@ class ListAccess:
     def evaluate(self):
         list_value = self.list_expr.evaluate()
         index_value = self.index_expr.evaluate()
-        return list_value[index_value]
+        if isinstance(list_value, list):
+            try:
+                return list_value[index_value]
+            except IndexError:
+                raise IndexError("Índice fuera de rango")
+        else:
+            raise TypeError("El objeto no es una lista")
 
 class Return:
     def __init__(self, expression):
@@ -220,7 +253,7 @@ class Return:
     def evaluate(self):
         result = self.expression.evaluate()
         return result
-    
+        
     def execute(self):
         return self
 
@@ -258,6 +291,88 @@ class Input:
         
         # Devolver la cadena original si no es número
         return user_input
+
+# ========================
+# FUNCIONES INCORPORADAS
+# ========================
+
+def length_function(args):
+    if len(args) != 1:
+        raise TypeError(f"length() espera 1 argumento, pero recibió {len(args)}.")
+    lst = args[0]
+    if isinstance(lst, list):
+        return len(lst)
+    else:
+        raise TypeError("El argumento de 'length' debe ser una lista.")
+
+def append_function(args):
+    if len(args) != 2:
+        raise TypeError(f"append() espera 2 argumentos, pero recibió {len(args)}.")
+    lst, item = args
+    if not isinstance(lst, list):
+        raise TypeError("El primer argumento de 'append' debe ser una lista.")
+    lst.append(item)
+    return None  # append no devuelve nada
+
+def remove_function(args):
+    if len(args) != 2:
+        raise TypeError(f"remove() espera 2 argumentos, pero recibió {len(args)}.")
+    lst, item = args
+    if not isinstance(lst, list):
+        raise TypeError("El primer argumento de 'remove' debe ser una lista.")
+    try:
+        lst.remove(item)
+    except ValueError:
+        raise ValueError(f"El elemento '{item}' no se encuentra en la lista.")
+    return None  # remove no devuelve nada
+
+def insert_function(args):
+    if len(args) != 3:
+        raise TypeError(f"insert() espera 3 argumentos, pero recibió {len(args)}.")
+    lst, index, item = args
+    if not isinstance(lst, list):
+        raise TypeError("El primer argumento de 'insert' debe ser una lista.")
+    if not isinstance(index, int):
+        raise TypeError("El segundo argumento de 'insert' debe ser un entero.")
+    lst.insert(index, item)
+    return None  # insert no devuelve nada
+
+def pop_function(args):
+    if len(args) > 2:
+        raise TypeError(f"pop() espera como máximo 2 argumentos, pero recibió {len(args)}.")
+    lst = args[0]
+    if not isinstance(lst, list):
+        raise TypeError("El primer argumento de 'pop' debe ser una lista.")
+    if len(args) == 2:
+        index = args[1]
+        if not isinstance(index, int):
+            raise TypeError("El segundo argumento de 'pop' debe ser un entero.")
+        try:
+            return lst.pop(index)
+        except IndexError:
+            raise IndexError("Índice fuera de rango en 'pop'.")
+    else:
+        try:
+            return lst.pop()
+        except IndexError:
+            raise IndexError("No se puede realizar 'pop' en una lista vacía.")
+
+def clear_function(args):
+    if len(args) != 1:
+        raise TypeError(f"clear() espera 1 argumento, pero recibió {len(args)}.")
+    lst = args[0]
+    if not isinstance(lst, list):
+        raise TypeError("El argumento de 'clear' debe ser una lista.")
+    lst.clear()
+    return None  # clear no devuelve nada
+
+# Añadir funciones incorporadas al entorno de funciones
+functions['length'] = Function('length', ['lst'], length_function, builtin=True)
+functions['append'] = Function('append', ['lst', 'item'], append_function, builtin=True)
+functions['remove'] = Function('remove', ['lst', 'item'], remove_function, builtin=True)
+functions['insert'] = Function('insert', ['lst', 'index', 'item'], insert_function, builtin=True)
+functions['pop'] = Function('pop', ['lst', 'index'], pop_function, builtin=True)  # 'index' es opcional
+functions['clear'] = Function('clear', ['lst'], clear_function, builtin=True)
 
 # ========================
 # REGLAS DE LA GRAMÁTICA
@@ -306,8 +421,16 @@ def p_print_arguments_single(p):
     p[0] = [p[1]]
 
 def p_assign_expression(p):
-    'assign_expression : ID EQUALS expression'
+    'assign_expression : lvalue EQUALS expression'
     p[0] = Assign(p[1], p[3])
+
+def p_lvalue_id(p):
+    'lvalue : ID'
+    p[0] = Variable(p[1])
+
+def p_lvalue_list_access(p):
+    'lvalue : expression LBRACKET expression RBRACKET'
+    p[0] = ListAccess(p[1], p[3])
 
 def p_assign_statement(p):
     'assign_statement : assign_expression SEMICOLON'
@@ -413,7 +536,7 @@ def p_expression_number(p):
     p[0] = Number(p[1])
 
 def p_expression_negative(p):
-    'expression : MINUS expression %prec MINUS'
+    'expression : MINUS expression %prec UMINUS'
     p[0] = BinOp(Number(0), '-', p[2])
 
 def p_expression_string(p):
