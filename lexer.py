@@ -1,15 +1,23 @@
 import ply.lex as lex
 
-# Palabras reservadas (incluyendo 'input')
+
 reserved = {
     'print': 'PRINT',
-    'input': 'INPUT',  
+    'mostrar': 'PRINT',
+    'input': 'INPUT', 
+    'entrada': 'INPUT', 
     'if': 'IF',
+    'si': 'IF',
     'else': 'ELSE',
+    'sino': 'ELSE',
     'for': 'FOR',
+    'para': 'FOR',
     'while': 'WHILE',
+    'mientras': 'WHILE',
     'func': 'FUNC',
-    'return': 'RETURN'
+    'funcion': 'FUNC',
+    'return': 'RETURN',
+    'returna': 'RETURN'
 }
 
 # Lista de tokens
