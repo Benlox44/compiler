@@ -1,7 +1,14 @@
-a=1;
-b=1;
-c=1;
-d=1;
+func fibonacci(n) {
+    if (n <= 1) {
+        returna n;
+    } else {
+        returna fibonacci(n - 1) + fibonacci(n - 2);
+    }
+}
 
+x = 5;
+mostrar("The Fibonacci of", x, "es:", fibonacci(x));
 
-c == d;
+lista = [1, 2, 3];
+append(lista, 4);
+mostrar("Updated list:", lista);
