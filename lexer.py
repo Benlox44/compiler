@@ -17,7 +17,7 @@ reserved = {
     'func': 'FUNC',
     'funcion': 'FUNC',
     'return': 'RETURN',
-    'returna': 'RETURN'
+    'retorna': 'RETURN'
 }
 
 # Lista de tokens
