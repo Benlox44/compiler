@@ -1,5 +1,11 @@
 # Proyecto de Compilador
 
+Eduardo Erices Peña
+Benjamin Gilberto
+Silas Vieira
+C2
+
+
 Este proyecto consiste en un compilador diseñado para un lenguaje de programación funcional propio, desarrollado con la herramienta PLY (Python Lex-Yacc). El lenguaje permite la creación de programas mediante funciones, variables, estructuras de control y operaciones, con la posibilidad de escribir el código en inglés o español como diferenciador principal.
 
 ## Características del Lenguaje
