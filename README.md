@@ -130,7 +130,7 @@ func greet(name) {
 greet("Carlos");
 
 funcion suma(a, b) {
-    returna a + b;
+    retorna a + b;
 }
 resultado = suma(4, 6);
 print("El resultado de la suma es:", resultado);
@@ -190,16 +190,16 @@ You are 25 years old.
 **Entrada:**
 ```python
 func multiply(a, b) {
-    returna a * b;
+    retorna a * b;
 }
 resultado = multiply(5, 3);
 mostrar("The result of the multiplication es:", resultado);
 
 funcion factorial(n) {
     si (n <= 1) {
-        returna 1;
+        retorna 1;
     } sino {
-        returna n * factorial(n - 1);
+        retorna n * factorial(n - 1);
     }
 }
 print("El factorial de 4 es:", factorial(4));
@@ -216,9 +216,9 @@ El factorial de 4 es: 24
 ```python
 func fibonacci(n) {
     if (n <= 1) {
-        returna n;
+        retorna n;
     } else {
-        returna fibonacci(n - 1) + fibonacci(n - 2);
+        retorna fibonacci(n - 1) + fibonacci(n - 2);
     }
 }
 
